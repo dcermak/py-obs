@@ -238,3 +238,91 @@ async def delete(
     await osc.api_request(
         route, method="DELETE", params={"force": "1"} if force else None
     )
+
+
+@dataclass(frozen=True)
+class _Directory(MetaMixin):
+    @dataclass(frozen=True)
+    class Entry(MetaMixin):
+        _element_name: ClassVar[str] = "entry"
+
+        name: str | None
+        md5: str | None
+        size: int | None
+        mtime: int | None
+        originproject: str | None
+        available: bool | None
+        recommended: bool | None
+        hash: str | None
+
+    @dataclass(frozen=True)
+    class LinkInfo(MetaMixin):
+        _element_name: ClassVar[str] = "linkinfo"
+
+        project: str | None
+        package: str | None
+        srcmd5: str | None
+        rev: str | None
+        baserev: str | None
+        xsrcmd5: str | None
+        lsrcmd5: str | None
+        error: str | None
+
+    @dataclass(frozen=True)
+    class ServiceInfo(MetaMixin):
+        _element_name: ClassVar[str] = "serviceinfo"
+        code: str | None
+        error: str | None
+        lsrcmd5: str | None
+        xsrcmd5: str | None
+
+    _element_name: ClassVar[str] = "directory"
+
+    name: str | None
+    rev: str | None
+    vrev: str | None
+    srcmd5: str | None
+    count: int | None
+
+    entry: list[Entry]
+    linkinfo: list[LinkInfo]
+    serviceinfo: list[ServiceInfo]
+
+
+def _prj_and_pkg_name(prj: str | Project, pkg: Package | str) -> tuple[str, str]:
+    return (
+        prj.name if isinstance(prj, Project) else prj,
+        pkg.name if isinstance(pkg, Package) else pkg,
+    )
+
+
+@dataclass(frozen=True)
+class File:
+    #: The file name
+    name: str
+
+    #: MD5 Hash of the file contents
+    md5_sum: str
+
+    #: file size in bytes
+    size: int
+
+    #: Unix time of the last modification
+    mtime: int
+
+
+async def fetch_file_list(
+    osc: Osc, prj: str | Project, pkg: Package | str
+) -> list[File]:
+    """Fetch the list of files of a package in the given project."""
+    prj_name, pkg_name = _prj_and_pkg_name(prj, pkg)
+
+    return [
+        File(name=entry.name, md5_sum=entry.md5, size=entry.size, mtime=entry.mtime)
+        for entry in (
+            await _Directory.from_response(
+                await osc.api_request(route=f"/source/{prj_name}/{pkg_name}")
+            )
+        ).entry
+        if entry.name and entry.md5 and entry.size and entry.mtime
+    ]
