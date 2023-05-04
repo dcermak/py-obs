@@ -326,3 +326,33 @@ async def fetch_file_list(
         ).entry
         if entry.name and entry.md5 and entry.size and entry.mtime
     ]
+
+
+async def fetch_file_contents(
+    osc: Osc, prj: str | Project, pkg: Package | str, file: str | File
+) -> bytes:
+    """Fetch the contents of a file on OBS"""
+    prj_name, pkg_name = _prj_and_pkg_name(prj, pkg)
+    fname = file.name if isinstance(file, File) else file
+
+    return await (
+        await osc.api_request(f"/source/{prj_name}/{pkg_name}/{fname}")
+    ).read()
+
+
+async def fetch_all_files(
+    osc: Osc, prj: str | Project, pkg: Package | str
+) -> dict[str, bytes]:
+    res = {}
+
+    tasks = []
+    for file in await fetch_file_list(osc, prj, pkg):
+
+        async def _fetch_cur_file(f: File) -> None:
+            res[f] = await fetch_file_contents(osc, prj, pkg, f)
+
+        tasks.append(_fetch_cur_file(file))
+
+    await asyncio.gather(*tasks)
+
+    return res
