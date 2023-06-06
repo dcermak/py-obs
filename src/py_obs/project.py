@@ -33,6 +33,14 @@ class Repository(MetaMixin):
 
 
 @dataclass(frozen=True)
+class DevelProject(MetaMixin):
+    project: str
+    package: str
+
+    _element_name: ClassVar[str] = "devel"
+
+
+@dataclass(frozen=True)
 class Project(MetaMixin):
     name: str
     title: StrElementField
@@ -51,6 +59,7 @@ class Package(MetaMixin):
     description: StrElementField = StrElementField("")
 
     scmsync: StrElementField | None = None
+    devel: DevelProject | None = None
 
     _element_name: ClassVar[str] = "package"
 
