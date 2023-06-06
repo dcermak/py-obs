@@ -45,27 +45,14 @@ class Project(MetaMixin):
 
 
 @dataclass(frozen=True)
-class Package:
+class Package(MetaMixin):
     name: str
-    title: str
-    description: str = ""
+    title: StrElementField
+    description: StrElementField = StrElementField("")
 
-    scmsync: str | None = None
+    scmsync: StrElementField | None = None
 
     _element_name: ClassVar[str] = "package"
-
-    @property
-    def meta(self) -> ET.Element:
-        (pkg_conf := ET.Element(Package._element_name)).attrib["name"] = self.name
-        (title := ET.Element("title")).text = self.title
-        (descr := ET.Element("description")).text = self.description
-        pkg_conf.append(title)
-        pkg_conf.append(descr)
-        if self.scmsync:
-            (scmsync := ET.Element("scmsync")).text = self.scmsync
-            pkg_conf.append(scmsync)
-
-        return pkg_conf
 
 
 @dataclass(frozen=True)
