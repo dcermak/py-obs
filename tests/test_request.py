@@ -1,9 +1,6 @@
 import asyncio
-from typing import AsyncGenerator
 import pytest
 import xml.etree.ElementTree as ET
-from py_obs.osc import Osc
-from py_obs.project import Package, Project
 
 from py_obs.request import (
     _RequestCollection,
