@@ -58,8 +58,10 @@ class Package(MetaMixin):
     title: StrElementField
     description: StrElementField = StrElementField("")
 
+    person: list[Person] | None = None
     scmsync: StrElementField | None = None
     devel: DevelProject | None = None
+    url: StrElementField | None = None
 
     _element_name: ClassVar[str] = "package"
 
