@@ -19,3 +19,8 @@ pytest-asyncio = "^0.21.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+markers = [
+    "local_obs: marks tests requiring a local obs instance for testing",
+]
