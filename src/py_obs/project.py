@@ -238,6 +238,37 @@ async def delete(
     )
 
 
+@overload
+async def fetch_meta(osc: Osc, *, prj: Project | str) -> Project:
+    ...
+
+
+@overload
+async def fetch_meta(osc: Osc, *, prj: Project | str, pkg: Package | str) -> Package:
+    ...
+
+
+async def fetch_meta(
+    osc: Osc, *, prj: Project | str, pkg: Package | str | None = None
+) -> Project | Package:
+    """Fetch the config (aka the ``_meta``) of a package or project and return
+    an instance of :py:class:`Project` or :py:class`Package` depending on
+    whether the ``pkg`` parameter was supplied or not.
+
+    """
+    route = f"/source/{prj.name if isinstance(prj, Project) else prj}"
+
+    if pkg:
+        route += f"/{pkg.name if isinstance(pkg, Package) else pkg}"
+
+    route += "/_meta"
+
+    if pkg:
+        return await Package.from_response(await osc.api_request(route))
+
+    return await Project.from_response(await osc.api_request(route))
+
+
 @dataclass(frozen=True)
 class _Directory(MetaMixin):
     @dataclass(frozen=True)

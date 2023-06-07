@@ -1,8 +1,9 @@
 import xml.etree.ElementTree as ET
 import pytest
 from py_obs.person import PersonRole
-from py_obs.project import PathEntry, Person, Project, Repository
+from py_obs.project import PathEntry, Person, Project, Repository, fetch_meta
 from py_obs.xml_factory import StrElementField
+from tests.conftest import HOME_PROJ_T
 
 
 @pytest.mark.parametrize(
@@ -37,3 +38,11 @@ def test_project(project: Project, prj_meta: str):
     assert ET.canonicalize(
         ET.tostring(project.meta, short_empty_elements=True).decode("utf-8")
     ) == ET.canonicalize(prj_meta)
+
+
+@pytest.mark.asyncio
+async def test_fetch_project_meta(home_project: HOME_PROJ_T):
+    async for osc, admin_osc, prj, _ in home_project:
+        for osc_ in osc, admin_osc:
+            assert await fetch_meta(osc_, prj=prj) == prj
+            assert await fetch_meta(osc_, prj=prj.name) == prj
