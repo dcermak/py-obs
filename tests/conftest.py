@@ -4,6 +4,7 @@ from typing import AsyncGenerator
 import pytest
 
 from py_obs.osc import Osc
+from py_obs.person import Person
 import py_obs.project as project
 from py_obs.xml_factory import StrElementField
 
@@ -32,9 +33,11 @@ HOME_PROJ_T = AsyncGenerator[tuple[Osc, Osc, project.Project, project.Package], 
 async def home_project(local_osc: LOCAL_OSC_T) -> HOME_PROJ_T:
     async for osc, admin in local_osc:
         prj = project.Project(
-            name=f"home:{osc.username}", title=StrElementField("my home project")
+            name=f"home:{osc.username}",
+            title=StrElementField("my home project"),
+            person=[Person(userid=osc.username)],
         )
-        pkg = project.Package(name="emacs", title="The Emacs package")
+        pkg = project.Package(name="emacs", title=StrElementField("The Emacs package"))
 
         await project.send_meta(osc, prj=prj)
         await project.send_meta(osc, prj=prj, pkg=pkg)

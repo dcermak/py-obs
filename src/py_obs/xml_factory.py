@@ -129,7 +129,9 @@ class MetaMixin(ABC):
                 raise ValueError(
                     f"Expected exactly 1 child element with the name {name}, but got {len(matching_children)}"
                 )
-            return matching_children[0].text
+            # empty xml elements will contain None as text, but we must return a
+            # string
+            return matching_children[0].text or ""
 
         try:
             if issubclass(type, enum.Enum):

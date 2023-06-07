@@ -16,6 +16,7 @@ from py_obs.request import (
     search_for_requests,
     submit_package,
 )
+from py_obs.xml_factory import StrElementField
 from tests.conftest import HOME_PROJ_T
 
 
@@ -94,6 +95,7 @@ from tests.conftest import HOME_PROJ_T
                         who="defolos",
                         when="2022-11-30T08:06:01",
                         created="2022-11-29T16:19:16",
+                        comment=StrElementField(""),
                     ),
                 ),
                 Request(
@@ -117,6 +119,7 @@ from tests.conftest import HOME_PROJ_T
                         who="defolos",
                         when="2022-11-30T08:05:53",
                         created="2022-11-29T16:21:25",
+                        comment=StrElementField(""),
                     ),
                 ),
                 Request(
@@ -140,6 +143,7 @@ from tests.conftest import HOME_PROJ_T
                         who="dancermak",
                         when="2022-11-30T15:09:21",
                         created="2022-11-30T15:08:33",
+                        comment=StrElementField(""),
                     ),
                 ),
                 Request(
@@ -164,6 +168,7 @@ from tests.conftest import HOME_PROJ_T
                         who="defolos",
                         when="2022-11-30T16:12:37",
                         created="2022-11-30T16:11:15",
+                        comment=StrElementField(""),
                     ),
                 ),
                 Request(
@@ -188,6 +193,7 @@ from tests.conftest import HOME_PROJ_T
                         who="dirkmueller",
                         when="2022-12-01T12:22:26",
                         created="2022-12-01T09:48:43",
+                        comment=StrElementField(""),
                     ),
                 ),
             ],
