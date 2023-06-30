@@ -388,7 +388,7 @@ async def fetch_all_files(
     for file in await fetch_file_list(osc, prj, pkg, expand_links):
 
         async def _fetch_cur_file(f: File) -> None:
-            res[f] = await fetch_file_contents(osc, prj, pkg, f, expand_links)
+            res[f.name] = await fetch_file_contents(osc, prj, pkg, f, expand_links)
 
         tasks.append(_fetch_cur_file(file))
 
