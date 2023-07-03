@@ -379,9 +379,36 @@ async def fetch_file_contents(
     ).read()
 
 
+async def upload_file_contents(
+    osc: Osc,
+    prj: str | Project,
+    pkg: Package | str,
+    file: str | File,
+    new_contents: bytes | str,
+    keeplink: bool = True,
+) -> None:
+    """Upload the contents for the given file. This implicitly creates a new
+    commit.
+
+    """
+    prj_name, pkg_name = _prj_and_pkg_name(prj, pkg)
+    fname = file.name if isinstance(file, File) else file
+
+    await osc.api_request(
+        f"/source/{prj_name}/{pkg_name}/{fname}",
+        method="PUT",
+        payload=new_contents,
+        params={"keeplink": "1" if keeplink else "0"},
+    )
+
+
 async def fetch_all_files(
     osc: Osc, prj: str | Project, pkg: Package | str, expand_links: bool = True
 ) -> dict[str, bytes]:
+    """Retrieve all files for the given package. Returns a dictionary where the
+    file name is the key and the file contents the value.
+
+    """
     res = {}
 
     tasks = []
