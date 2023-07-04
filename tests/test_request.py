@@ -211,7 +211,7 @@ def test_request_from_obs(api_response: str, expected_list: list[Request]):
 async def test_submit_package(home_project: HOME_PROJ_T):
     async for osc, admin_osc, prj, pkg in home_project:
         req = await submit_package(
-            osc, source_prj=prj.name, pkg_name=pkg.name, dest_prj="openSUSE:Factory"
+            osc, source_prj=prj.name, pkg=pkg.name, dest_prj="openSUSE:Factory"
         )
 
         assert req
@@ -244,13 +244,13 @@ async def test_submit_package(home_project: HOME_PROJ_T):
 async def test_supersede_submit(home_project: HOME_PROJ_T):
     async for osc, admin_osc, prj, pkg in home_project:
         req = await submit_package(
-            osc, source_prj=prj.name, pkg_name=pkg.name, dest_prj="openSUSE:Factory"
+            osc, source_prj=prj.name, pkg=pkg.name, dest_prj="openSUSE:Factory"
         )
 
         req2 = await submit_package(
             osc,
             source_prj=prj.name,
-            pkg_name=pkg.name,
+            pkg=pkg.name,
             dest_prj="openSUSE:Factory",
             supersede_old_request=False,
         )
@@ -267,11 +267,11 @@ async def test_supersede_submit(home_project: HOME_PROJ_T):
         )
 
         req3 = await submit_package(
-            osc, source_prj=prj.name, pkg_name=pkg.name, dest_prj="openSUSE:Factory"
+            osc, source_prj=prj.name, pkg=pkg.name, dest_prj="openSUSE:Factory"
         )
         assert req3.id is not None
 
-        reqs = await search_for_requests(osc, ids=ids)
+        reqs = await search_for_requests(osc, ids=ids, states=[])
         assert len(reqs) == 2
         assert (
             (st0 := reqs[0].state)
@@ -288,10 +288,65 @@ async def test_supersede_submit(home_project: HOME_PROJ_T):
 @pytest.mark.asyncio
 async def test_fetch_request(home_project: HOME_PROJ_T):
     async for osc, admin_osc, prj, pkg in home_project:
-        req = await submit_package(
-            osc, source_prj=prj.name, pkg_name=pkg.name, dest_prj="openSUSE:Factory"
+        req = None
+        try:
+            req = await submit_package(
+                osc, source_prj=prj.name, pkg=pkg.name, dest_prj="openSUSE:Factory"
+            )
+
+            assert req == await fetch_request(osc, request=req)
+
+        finally:
+            if req:
+                await delete(admin_osc, request=req)
+
+
+@pytest.mark.asyncio
+async def test_supersede_requests_by_id(home_project: HOME_PROJ_T):
+    async for osc, _, prj, pkg in home_project:
+        req1 = await submit_package(
+            osc,
+            source_prj=prj.name,
+            pkg=pkg.name,
+            dest_prj="openSUSE:Factory",
+            supersede_old_request=False,
+        )
+        req2 = await submit_package(
+            osc,
+            source_prj=prj.name,
+            pkg=pkg.name,
+            dest_prj="openSUSE:Factory",
+            supersede_old_request=False,
         )
 
-        assert req == await fetch_request(osc, request=req)
+        cur_reqs = await search_for_requests(
+            osc,
+            user=osc.username,
+            package=pkg,
+            project="openSUSE:Factory",
+            # states=[RequestStatus.NEW, RequestStatus.REVIEW],
+        )
+        assert len(cur_reqs) == 2
 
-        await delete(admin_osc, request=req)
+        assert [rq for rq in cur_reqs if rq.id == req1.id]
+        assert [rq for rq in cur_reqs if rq.id == req2.id]
+
+        assert req2.id
+        req3 = await submit_package(
+            osc,
+            source_prj=prj.name,
+            pkg=pkg.name,
+            dest_prj="openSUSE:Factory",
+            supersede_old_request=False,
+            requests_to_supersede=[req1, req2.id],
+        )
+
+        assert [req3] == (
+            await search_for_requests(
+                osc,
+                user=osc.username,
+                package=pkg,
+                project="openSUSE:Factory",
+                #   states=[RequestStatus.NEW, RequestStatus.REVIEW],
+            )
+        )

@@ -310,14 +310,37 @@ async def search_for_requests(
 
 async def submit_package(
     osc: Osc,
-    source_prj: str,
-    pkg_name: str,
-    dest_prj: str,
-    dest_pkg: str | None = None,
+    source_prj: str | Project,
+    pkg: str | Package,
+    dest_prj: str | Project,
+    dest_pkg: str | Package | None = None,
     description: str = "",
     supersede_old_request: bool = True,
+    requests_to_supersede: list[Request | int] | None = None,
 ) -> Request:
+    """Create a new submitrequest of the package ``pkg`` from the source project
+    ``source_prj`` to the destination ``dest_prj``. If the destination package
+    ``dest_pkg`` is supplied, use that package name instead of the source
+    package name.
+
+    If ``supersede_old_request`` is `True`, **all** submit requests to the
+    destination package by this user will be superseded.
+
+    If a list of requests that shall be superseded is supplied, then those
+    requests will be superseded by the newly created request.
+
+    Both ``supersede_old_request`` and ``requests_to_supersede`` can be provided
+    at the same time.
+
+    """
     ACTION = RequestActionType.SUBMIT
+
+    src_pkg_name: str = pkg if isinstance(pkg, str) else pkg.name
+    dest_pkg_name: str = (
+        src_pkg_name
+        if dest_pkg is None
+        else (dest_pkg if isinstance(dest_pkg, str) else dest_pkg.name)
+    )
     rq = Request(
         id=None,
         creator=osc.username,
@@ -325,8 +348,16 @@ async def submit_package(
         action=[
             RequestAction(
                 type=ACTION,
-                source=RequestSource(project=source_prj, package=pkg_name),
-                target=RequestTarget(project=dest_prj, package=dest_pkg or pkg_name),
+                source=RequestSource(
+                    project=(
+                        source_prj if isinstance(source_prj, str) else source_prj.name
+                    ),
+                    package=src_pkg_name,
+                ),
+                target=RequestTarget(
+                    project=(dest_prj if isinstance(dest_prj, str) else dest_prj.name),
+                    package=dest_pkg_name,
+                ),
             )
         ],
     )
@@ -339,32 +370,43 @@ async def submit_package(
 
     created_request = Request.from_xml(ET.fromstring(await res.read()))
 
+    to_supersede_ids = []
+
     if supersede_old_request:
         requests = await search_for_requests(
             osc,
             user=osc.username,
             project=dest_prj,
-            package=dest_pkg or pkg_name,
+            package=dest_pkg or pkg,
             types=[ACTION],
             states=[RequestStatus.NEW, RequestStatus.REVIEW],
         )
-        tasks = []
         for request in requests:
             # don't try to supersede the just created request
             # and don't bother trying to supersede somebody else' request
             if request.id == created_request.id or request.creator != osc.username:
                 continue
 
-            route = f"/request/{request.id}?" + urlencode(
-                query=[
-                    ("cmd", "changestate"),
-                    ("newstate", RequestStatus.SUPERSEDED),
-                    ("superseded_by", created_request.id),
-                ]
-            )
-            tasks.append(osc.api_request(method="POST", route=route))
+            to_supersede_ids.append(request.id)
 
-        await asyncio.gather(*tasks)
+    for rq in requests_to_supersede or []:
+        if isinstance(rq, Request):
+            to_supersede_ids.append(rq.id)
+        else:
+            to_supersede_ids.append(rq)
+
+    tasks = []
+    for rq_id in set(to_supersede_ids):
+        route = f"/request/{rq_id}?" + urlencode(
+            query=[
+                ("cmd", "changestate"),
+                ("newstate", RequestStatus.SUPERSEDED),
+                ("superseded_by", created_request.id),
+            ]
+        )
+        tasks.append(osc.api_request(method="POST", route=route))
+
+    await asyncio.gather(*tasks)
 
     return created_request
 
