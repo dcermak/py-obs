@@ -265,10 +265,22 @@ async def search_for_requests(
     ids: list[int] | None = None,
     types: list[RequestActionType] | None = None,
 ) -> list[Request]:
+    """Search for requests by any combination of the following parameters:
+    - userid
+    - project
+    - package
+    - request states (if not provided, then search for requests in state new or
+      review)
+    - roles of the request creator
+    - request type
+    """
     route = "/request?view=collection"
     query: list[tuple[str, str]] = [("view", "collection")]
 
     assert user or project or package or states or roles or ids or types
+
+    if states is None:
+        states = [RequestStatus.NEW, RequestStatus.REVIEW]
 
     if user:
         query.append(("user", user))
