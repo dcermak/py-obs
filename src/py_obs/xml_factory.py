@@ -7,6 +7,11 @@ import xml.etree.ElementTree as ET
 
 from aiohttp import ClientResponse
 
+if typing.TYPE_CHECKING:
+    from _typeshed import DataclassInstance
+else:
+    DataclassInstance = None
+
 
 StrElementField = typing.NewType("StrElementField", str)
 
@@ -76,7 +81,7 @@ class MetaMixin(ABC):
     @property
     def meta(self) -> ET.Element:
         elem = ET.Element(self._element_name)
-        for field in dataclasses.fields(self):
+        for field in dataclasses.fields(typing.cast(DataclassInstance, self)):
             # omit private fields
             if field.name.startswith("_"):
                 continue
@@ -201,7 +206,9 @@ class MetaMixin(ABC):
 
         kwargs: dict[str, typing.Any] = {}
 
-        for field in dataclasses.fields(cls):
+        for field in dataclasses.fields(
+            typing.cast(typing.Type[DataclassInstance], cls)
+        ):
             # omit private fields
             if field.name.startswith("_"):
                 continue

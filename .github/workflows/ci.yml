@@ -47,6 +47,8 @@ jobs:
 
       - run: poetry run ruff src
 
+      - run: poetry run mypy src
+
   ci:
     name: Run the integration tests
     runs-on: ubuntu-latest
