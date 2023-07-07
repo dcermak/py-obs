@@ -46,11 +46,16 @@ class MetaMixin(ABC):
     def _is_union_type(type: typing.Any) -> bool:
         return (
             (origin := typing.get_origin(type)) is typing.Union
+            # ruff complains that we should use isinstance instead of is here,
+            # but that is not enough => hence suppress the error
+            # ruff: noqa: E721
             or origin is types.UnionType
             or isinstance(origin, types.UnionType)
         )
 
-    # def field_converter(self, field: dataclasses.Field[typing.Any], xml_element: ET.Element) -> typing.Any:
+    # def field_converter(
+    #    self, field: dataclasses.Field[typing.Any],
+    #    xml_element: ET.Element) -> typing.Any:
 
     def field_transformer(
         self, field: dataclasses.Field[typing.Any]
@@ -101,7 +106,7 @@ class MetaMixin(ABC):
 
             if (
                 MetaMixin._is_union_type(type)
-                and not types.NoneType in typing.get_args(type)
+                and types.NoneType not in typing.get_args(type)
                 and val is None
             ):
                 raise ValueError(f"field '{field.name}' is None, but it must not be")
@@ -127,7 +132,8 @@ class MetaMixin(ABC):
             matching_children = xml_element.findall(name)
             if len(matching_children) != 1:
                 raise ValueError(
-                    f"Expected exactly 1 child element with the name {name}, but got {len(matching_children)}"
+                    f"Expected exactly 1 child element with the name {name},"
+                    f" but got {len(matching_children)}"
                 )
             # empty xml elements will contain None as text, but we must return a
             # string
