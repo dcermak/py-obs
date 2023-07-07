@@ -8,7 +8,10 @@ from py_obs.logger import LOGGER
 
 class ObsException(aiohttp.ClientResponseError):
     def __str__(self) -> str:
-        return f"Error talking to OBS: {self.status=}, {self.message=}, {self.request_info=}"
+        return (
+            f"Error talking to OBS: {self.status=}, {self.message=},"
+            f"{self.request_info=}"
+        )
 
 
 @dataclasses.dataclass
