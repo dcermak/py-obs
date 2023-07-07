@@ -1,6 +1,6 @@
 import asyncio
 from dataclasses import dataclass, field
-from typing import ClassVar, overload
+from typing import ClassVar, cast, overload
 import xml.etree.ElementTree as ET
 
 from py_obs.osc import Osc
@@ -137,7 +137,7 @@ async def search_for_maintainers(
                 if grp.name not in groups_to_ignore:
                     tasks.append(fetch_group(osc, grp.name))
 
-            res: tuple[UserGroup] = await asyncio.gather(*tasks)
+            res = cast(tuple[UserGroup], await asyncio.gather(*tasks))
             return [
                 Person2(maint.userid) for grp in res for maint in grp.maintainer
             ] + [Person2(pers.userid) for grp in res for pers in grp.person.person]

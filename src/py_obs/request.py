@@ -119,7 +119,7 @@ class RequestAction(MetaMixin):
                 if self.person
                 else None
             )
-            return pers, "person", Person2 | None
+            return pers, "person", Person2 | None  # type: ignore
         return super().field_transformer(field)
 
     @staticmethod
@@ -151,7 +151,7 @@ class RequestState(MetaMixin):
         self, field: Field[typing.Any]
     ) -> tuple[T, str, typing.Type[T]]:
         if field.name == "state":
-            return self.state, "name", RequestStatus
+            return self.state, "name", RequestStatus  # type: ignore
         return super().field_transformer(field)
 
     _field_converters: typing.ClassVar[
@@ -389,11 +389,11 @@ async def submit_package(
 
             to_supersede_ids.append(request.id)
 
-    for rq in requests_to_supersede or []:
-        if isinstance(rq, Request):
-            to_supersede_ids.append(rq.id)
+    for req in requests_to_supersede or []:
+        if isinstance(req, Request):
+            to_supersede_ids.append(req.id)
         else:
-            to_supersede_ids.append(rq)
+            to_supersede_ids.append(req)
 
     tasks = []
     for rq_id in set(to_supersede_ids):

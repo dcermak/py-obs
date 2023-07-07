@@ -21,7 +21,9 @@ class Osc:
 
     api_url: str = "https://api.opensuse.org/"
 
-    _session: aiohttp.ClientSession = None
+    _session: aiohttp.ClientSession = dataclasses.field(
+        default_factory=lambda: aiohttp.ClientSession()
+    )
 
     @staticmethod
     def from_env() -> "Osc":
