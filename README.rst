@@ -9,7 +9,7 @@ Testing
 -------
 
 The following commands will launch a local OBS instance using
-:command:`docker-compose`:
+``docker-compose``:
 
 .. code-block:: shell-session
 
