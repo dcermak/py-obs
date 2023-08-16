@@ -12,18 +12,23 @@ from py_obs.xml_factory import StrElementField
 LOCAL_OSC_T = AsyncGenerator[tuple[Osc, Osc], None]
 
 
+def osc_test_user_name() -> str:
+    return os.getenv("OSC_USER", "obsTestUser")
+
+
 @pytest.fixture(scope="function")
 async def local_osc(request: pytest.FixtureRequest) -> LOCAL_OSC_T:
     request.applymarker(pytest.mark.local_obs)
-    yield (
-        local := Osc(
-            username=os.getenv("OSC_USER", "obsTestUser"),
-            password=os.getenv("OSC_PASSWORD", "nots3cr3t"),
-            api_url=(api_url := os.getenv("OBS_URL", "http://localhost:3000")),
-        )
-    ), (admin := Osc(username="Admin", password="opensuse", api_url=api_url))
-
-    await asyncio.gather(local.teardown(), admin.teardown())
+    local = Osc(
+        username=osc_test_user_name(),
+        password=os.getenv("OSC_PASSWORD", "nots3cr3t"),
+        api_url=(api_url := os.getenv("OBS_URL", "http://localhost:3000")),
+    )
+    admin = Osc(username="Admin", password="opensuse", api_url=api_url)
+    try:
+        yield (local, admin)
+    finally:
+        await asyncio.gather(local.teardown(), admin.teardown())
 
 
 HOME_PROJ_T = AsyncGenerator[tuple[Osc, Osc, project.Project, project.Package], None]
@@ -42,6 +47,7 @@ async def home_project(local_osc: LOCAL_OSC_T) -> HOME_PROJ_T:
         await project.send_meta(osc, prj=prj)
         await project.send_meta(osc, prj=prj, pkg=pkg)
 
-        yield osc, admin, prj, pkg
-
-        await project.delete(osc, prj=prj)
+        try:
+            yield osc, admin, prj, pkg
+        finally:
+            await project.delete(osc, prj=prj)
