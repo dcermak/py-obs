@@ -154,6 +154,7 @@ class Osc:
     ssh_key_path: str | None = None
     cookie_jar_path: str = os.path.expanduser("~/.local/state/osc/cookiejar")
 
+    _auth: aiohttp.BasicAuth | SignatureAuth | None = None
     _session: aiohttp.ClientSession = dataclasses.field(
         default_factory=lambda: aiohttp.ClientSession()
     )
@@ -201,9 +202,10 @@ class Osc:
                 url=route,
                 data=payload,
                 headers=headers,
+                auth=self._auth,
             )
         except aiohttp.ClientResponseError as cre_exc:
-            if cre_exc.status != 401:
+            if cre_exc.status != 401 and self._auth is not None:
                 raise ObsException(**cre_exc.__dict__) from cre_exc
 
             # TODO: lock and run the following code only in 1 thread; other
@@ -218,28 +220,27 @@ class Osc:
             ]
             LOGGER.debug(f"Supported auth methods: {supported_auth_methods}")
 
-            auth: SignatureAuth | aiohttp.BasicAuth | None = None
             for auth_method in supported_auth_methods:
                 if auth_method == "signature" and self.ssh_key_path:
-                    auth = SignatureAuth(
+                    self._auth = SignatureAuth(
                         login=self.username,
                         ssh_key_path=self.ssh_key_path,
                         response_headers=cre_exc.headers,
                     )
                     break
                 elif auth_method == "basic" and self.password:
-                    auth = aiohttp.BasicAuth(
+                    self._auth = aiohttp.BasicAuth(
                         login=self.username, password=self.password
                     )
                     break
 
-            if not auth:
+            if not self._auth:
                 # we have no suitable auth handler, let's re-raise the original
                 # exception
                 raise ObsException(**cre_exc.__dict__) from cre_exc
 
             return await self._session.request(
-                method=method, params=params, url=route, data=payload, auth=auth
+                method=method, params=params, url=route, data=payload, auth=self._auth
             )
 
     def __post_init__(self) -> None:
@@ -247,6 +248,9 @@ class Osc:
             raise ValueError(
                 "Either a password or a path to the ssh public key must be provided"
             )
+        if self.password:
+            self._auth = aiohttp.BasicAuth(login=self.username, password=self.password)
+
         self._session = aiohttp.ClientSession(
             raise_for_status=True,
             base_url=self.api_url,
