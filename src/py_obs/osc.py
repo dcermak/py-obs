@@ -148,10 +148,16 @@ _DEFAULT_API_URL = "https://api.opensuse.org/"
 
 @dataclasses.dataclass
 class Osc:
-    username: str
+    username: str = ""
     password: str = ""
     api_url: str = _DEFAULT_API_URL
     ssh_key_path: str | None = None
+
+    #: Use the undocumented public/ routes used for interconnect to communicate
+    #: with OBS
+    #: This allows you to talk to OBS without authentication, but only a subset
+    #: of the API routes is present. Use at your own risk.
+    public: bool = False
     cookie_jar_path: str = os.path.expanduser("~/.local/state/osc/cookiejar")
 
     _auth: aiohttp.BasicAuth | SignatureAuth | None = None
@@ -183,6 +189,9 @@ class Osc:
         params: dict[str, str] | None = None,
         method: typing.Literal["GET", "POST", "PUT", "DELETE"] = "GET",
     ) -> aiohttp.ClientResponse:
+        if self.public:
+            route = f"/public{route}"
+
         LOGGER.debug(
             "Sending a %s request to %s with the parameters %s and the payload %s",
             method,
@@ -206,6 +215,9 @@ class Osc:
             )
         except aiohttp.ClientResponseError as cre_exc:
             if cre_exc.status != 401 and self._auth is not None:
+                raise ObsException(**cre_exc.__dict__) from cre_exc
+
+            if cre_exc.status == 401 and self.public:
                 raise ObsException(**cre_exc.__dict__) from cre_exc
 
             # TODO: lock and run the following code only in 1 thread; other
@@ -244,7 +256,12 @@ class Osc:
             )
 
     def __post_init__(self) -> None:
-        if not self.password and not self.ssh_key_path:
+        if not self.username and not self.public:
+            raise ValueError(
+                "A username must be provided if the public route is not used"
+            )
+
+        if (not self.password and not self.ssh_key_path) and not self.public:
             raise ValueError(
                 "Either a password or a path to the ssh public key must be provided"
             )
