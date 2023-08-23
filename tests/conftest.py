@@ -16,13 +16,17 @@ def osc_test_user_name() -> str:
     return os.getenv("OSC_USER", "obsTestUser")
 
 
+def local_obs_apiurl() -> str:
+    return os.getenv("OBS_URL", "http://localhost:3000")
+
+
 @pytest.fixture(scope="function")
 async def local_osc(request: pytest.FixtureRequest) -> LOCAL_OSC_T:
     request.applymarker(pytest.mark.local_obs)
     local = Osc(
         username=osc_test_user_name(),
         password=os.getenv("OSC_PASSWORD", "nots3cr3t"),
-        api_url=(api_url := os.getenv("OBS_URL", "http://localhost:3000")),
+        api_url=(api_url := local_obs_apiurl()),
     )
     admin = Osc(username="Admin", password="opensuse", api_url=api_url)
     try:
