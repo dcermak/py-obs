@@ -1,6 +1,8 @@
+import configparser
 import dataclasses
 import http.cookiejar
 import os
+import os.path
 import re
 import subprocess
 import time
@@ -170,6 +172,48 @@ class Osc:
             "Accept": "application/xml; charset=utf-8",
         }
     )
+
+    @staticmethod
+    def from_oscrc(api_url: str | None = None) -> "Osc":
+        """Create a Osc instance from the oscrc config file."""
+        with open(
+            os.path.join(
+                os.getenv("XDG_CONFIG_HOME", os.path.expanduser("~/.config")),
+                "osc",
+                "oscrc",
+            ),
+            "r",
+            encoding="utf-8",
+        ) as oscrc_f:
+            oscrc = configparser.ConfigParser(default_section="general")
+            oscrc.read_file(oscrc_f)
+
+        if not api_url:
+            try:
+                api_url = oscrc["general"]["apiurl"]
+            except KeyError:
+                raise ValueError("oscrc general section is missing the apiurl option")
+
+        try:
+            sect = oscrc[api_url]
+        except KeyError:
+            raise ValueError(f"Missing section '{api_url}' in oscrc")
+
+        try:
+            user = sect["user"]
+        except KeyError:
+            raise ValueError(f"user option missing in section '{api_url}'")
+
+        if "pass" in sect:
+            return Osc(password=sect["pass"], username=user, api_url=api_url)
+        if "sshkey" in sect:
+            return Osc(
+                ssh_key_path=os.path.expanduser(f"~/.ssh/{sect['sshkey']}.pub"),
+                username=user,
+                api_url=api_url,
+            )
+
+        raise ValueError(f"pass and sshkey are both missing in section '{api_url}'")
 
     @staticmethod
     def from_env() -> "Osc":
