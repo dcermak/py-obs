@@ -1,5 +1,6 @@
 import asyncio
 from dataclasses import dataclass, field
+from enum import StrEnum, auto
 from typing import ClassVar, cast, overload
 import xml.etree.ElementTree as ET
 
@@ -23,9 +24,24 @@ class PathEntry(MetaMixin):
     _element_name: ClassVar[str] = "path"
 
 
+class RebuildMode(StrEnum):
+    """Rebuild modes of a repository."""
+
+    #: default: build on source change and all depending packages including
+    #: indirect dependencies
+    TRANSITIVE = auto()
+
+    #: build on source change and direct depending packages
+    DIRECT = auto()
+
+    #: build on source change only
+    LOCAL = auto()
+
+
 @dataclass(frozen=True)
 class Repository(MetaMixin):
     name: str
+    rebuild: RebuildMode | None = None
     path: list[PathEntry] | None = None
     arch: list[str] | None = None
 
