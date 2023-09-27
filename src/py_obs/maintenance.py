@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from py_obs.osc import Osc
+from py_obs.osc import ObsException, Osc
 from py_obs.project import Package
 from py_obs.xml_factory import MetaMixin
 
@@ -20,11 +20,12 @@ class _Collection(MetaMixin):
 
 async def fetch_maintained_code_streams(osc: Osc, pkg: Package | str) -> list[str]:
     """Fetches the list of code streams where the specified package is
-    maintained (and not just inherited from).
+    maintained (and not just inherited from). If the package does not exist,
+    then an empty list is returned.
 
     """
-    res = await _Collection.from_response(
-        await osc.api_request(
+    try:
+        resp = await osc.api_request(
             "/source",
             method="POST",
             params={
@@ -35,5 +36,11 @@ async def fetch_maintained_code_streams(osc: Osc, pkg: Package | str) -> list[st
                 "update_project_attribute": "OBS:UpdateProject",
             },
         )
-    )
+    except ObsException as obs_err:
+        # package not found -> not maintained anywhere
+        if obs_err.status == 404:
+            return []
+        raise
+
+    res = await _Collection.from_response(resp)
     return [pkg.project for pkg in res.package]
