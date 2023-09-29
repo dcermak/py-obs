@@ -222,7 +222,6 @@ async def create_token(
         "description": description,
     }
     kwargs = {k: v for k, v in params.items() if v is not None}
-    kwargs["cmd"] = "create"
 
     status = await Status.from_response(
         await osc.api_request(
