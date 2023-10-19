@@ -13,7 +13,13 @@ PKG = "emacs"
     "kind",
     # skip rss tokens, they cannot be created via the API:
     # https://github.com/openSUSE/open-build-service/issues/14810
-    [TokenKind.SERVICE, TokenKind.REBUILD, TokenKind.RELEASE, None, TokenKind.WORKFLOW],
+    [
+        TokenKind.RUNSERVICE,
+        TokenKind.REBUILD,
+        TokenKind.RELEASE,
+        None,
+        TokenKind.WORKFLOW,
+    ],
 )
 @pytest.mark.parametrize("project,package", [(None, None), (PRJ, PKG)])
 @pytest.mark.parametrize("description", ["", "this is a description"])
@@ -39,7 +45,7 @@ async def test_token_operations(
             **kwargs,
         )
 
-        assert token.kind == (kind or TokenKind.SERVICE)
+        assert token.kind == (kind or TokenKind.RUNSERVICE)
         assert token.description == description
         assert token.package == package
         assert token.project == project

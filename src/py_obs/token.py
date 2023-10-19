@@ -37,7 +37,9 @@ class TokenKind(StrEnum):
     RELEASE = auto()
 
     #: run services
-    SERVICE = auto()
+    # has to be temporarily overwritten because the OBS API is inconsistent:
+    # https://github.com/openSUSE/open-build-service/issues/15078
+    RUNSERVICE = "service"
 
 
 @dataclass(frozen=True)
@@ -136,7 +138,7 @@ async def create_token(
     project: str,
     package: str,
     operation: Literal[
-        TokenKind.REBUILD, TokenKind.RELEASE, TokenKind.SERVICE, None
+        TokenKind.REBUILD, TokenKind.RELEASE, TokenKind.RUNSERVICE, None
     ] = None,
     username: str | None = None,
     description: str = "",
@@ -150,7 +152,7 @@ async def create_token(
     osc: Osc,
     *,
     operation: Literal[
-        TokenKind.REBUILD, TokenKind.RELEASE, TokenKind.SERVICE, None
+        TokenKind.REBUILD, TokenKind.RELEASE, TokenKind.RUNSERVICE, None
     ] = None,
     username: str | None = None,
     description: str = "",
@@ -191,7 +193,7 @@ async def create_token(
     osc: Osc,
     project: str | None = None,
     package: str | None = None,
-    operation: TokenKind | None = TokenKind.SERVICE,
+    operation: TokenKind | None = TokenKind.RUNSERVICE,
     username: str | None = None,
     scm_token: str | None = None,
     description: str = "",
@@ -217,7 +219,8 @@ async def create_token(
     params = {
         "project": project,
         "package": package,
-        "operation": operation,
+        # workaround for https://github.com/openSUSE/open-build-service/issues/15078
+        "operation": "runservice" if operation == TokenKind.RUNSERVICE else operation,
         "scm_token": scm_token,
         "description": description,
     }
