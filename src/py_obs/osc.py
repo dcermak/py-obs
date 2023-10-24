@@ -63,7 +63,11 @@ class SignatureAuth(aiohttp.BasicAuth):
         proc = subprocess.Popen(
             cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, encoding="utf-8"
         )
-        stdout, _ = proc.communicate(data)
+        stdout, stderr = proc.communicate(data)
+        if proc.returncode != 0:
+            raise RuntimeError(
+                f"ssh-keygen exited with {proc.returncode} and got {stdout=}, {stderr=}"
+            )
 
         match = re.match(
             r"\A-----BEGIN SSH SIGNATURE-----\n(.*)\n-----END SSH SIGNATURE-----",

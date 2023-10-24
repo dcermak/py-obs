@@ -37,9 +37,7 @@ class TokenKind(StrEnum):
     RELEASE = auto()
 
     #: run services
-    # has to be temporarily overwritten because the OBS API is inconsistent:
-    # https://github.com/openSUSE/open-build-service/issues/15078
-    RUNSERVICE = "service"
+    RUNSERVICE = "runservice"
 
 
 @dataclass(frozen=True)
@@ -219,8 +217,7 @@ async def create_token(
     params = {
         "project": project,
         "package": package,
-        # workaround for https://github.com/openSUSE/open-build-service/issues/15078
-        "operation": "runservice" if operation == TokenKind.RUNSERVICE else operation,
+        "operation": operation,
         "scm_token": scm_token,
         "description": description,
     }
