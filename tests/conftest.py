@@ -3,7 +3,7 @@ import os
 from typing import AsyncGenerator
 import pytest
 
-from py_obs.osc import Osc
+from py_obs.osc import ObsException, Osc
 from py_obs.person import Person
 import py_obs.project as project
 from py_obs.xml_factory import StrElementField
@@ -47,6 +47,13 @@ async def home_project(local_osc: LOCAL_OSC_T) -> HOME_PROJ_T:
             person=[Person(userid=osc.username)],
         )
         pkg = project.Package(name="emacs", title=StrElementField("The Emacs package"))
+
+        # try to delete the home project in case it is left over from previous
+        # unsuccessful test runs
+        try:
+            await project.delete(osc, prj=prj)
+        except ObsException:
+            pass
 
         await project.send_meta(osc, prj=prj)
         await project.send_meta(osc, prj=prj, pkg=pkg)
