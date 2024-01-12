@@ -18,6 +18,6 @@ git submodule init
 git submodule update
 
 # don't build the containers for testing, we don't need them and it just takes ages
-sed -i '/docker-compose.*docker-compose\.yml.*docker-compose\.minitest\.yml.*docker-compose\.minitest-user\.yml.*build.*minitest/d' Rakefile
+sed -i '/docker compose.*docker-compose\.yml.*docker-compose\.minitest\.yml.*docker-compose\.minitest-user\.yml.*build.*minitest/d' Rakefile
 rake docker:build
-docker-compose up -d
+docker compose up -d
