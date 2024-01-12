@@ -341,6 +341,21 @@ def _prj_and_pkg_name(prj: str | Project, pkg: Package | str) -> tuple[str, str]
     )
 
 
+async def fetch_package_list(osc: Osc, project: Project | str) -> list[str]:
+    """Retrieve the list of packages in the supplied project"""
+    return [
+        entry.name
+        for entry in (
+            await _Directory.from_response(
+                await osc.api_request(
+                    f"/source/{project.name if isinstance(project, Project) else project}"
+                )
+            )
+        ).entry
+        if entry.name
+    ]
+
+
 @dataclass(frozen=True)
 class File:
     #: The file name

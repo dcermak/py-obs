@@ -2,12 +2,15 @@ import xml.etree.ElementTree as ET
 import pytest
 from py_obs.person import PersonRole
 from py_obs.project import (
+    Package,
     PathEntry,
     Person,
     Project,
     RebuildMode,
     Repository,
     fetch_meta,
+    fetch_package_list,
+    send_meta,
 )
 from py_obs.xml_factory import StrElementField
 from tests.conftest import HOME_PROJ_T
@@ -63,3 +66,19 @@ async def test_fetch_project_meta(home_project: HOME_PROJ_T):
         for osc_ in osc, admin_osc:
             assert await fetch_meta(osc_, prj=prj) == prj
             assert await fetch_meta(osc_, prj=prj.name) == prj
+
+
+@pytest.mark.asyncio
+async def test_fetch_package_list(home_project: HOME_PROJ_T):
+    async for osc, _, prj, pkg in home_project:
+        assert (await fetch_package_list(osc, prj)) == [pkg.name]
+
+        await send_meta(
+            osc, prj=prj, pkg=Package("vim", title=StrElementField("vim editor"))
+        )
+
+        assert (
+            "vim" in (new_pkg_list := await fetch_package_list(osc, prj))
+            and pkg.name in new_pkg_list
+            and len(new_pkg_list) == 2
+        )
