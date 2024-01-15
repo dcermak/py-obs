@@ -262,7 +262,7 @@ class Osc:
                 auth=self._auth,
             )
         except aiohttp.ClientResponseError as cre_exc:
-            if cre_exc.status != 401 and self._auth is not None:
+            if cre_exc.status != 401:
                 raise ObsException(**cre_exc.__dict__) from cre_exc
 
             if cre_exc.status == 401 and self.public:
