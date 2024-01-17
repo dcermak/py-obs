@@ -1,9 +1,12 @@
 import asyncio
 import pytest
 import xml.etree.ElementTree as ET
+from py_obs.history import fetch_package_history
+from py_obs.project import upload_file_contents
 
 from py_obs.request import (
     _RequestCollection,
+    PackageRevision,
     Request,
     RequestAction,
     RequestActionType,
@@ -350,3 +353,46 @@ async def test_supersede_requests_by_id(home_project: HOME_PROJ_T):
                 #   states=[RequestStatus.NEW, RequestStatus.REVIEW],
             )
         )
+
+
+@pytest.mark.asyncio
+async def test_request_with_revision(home_project: HOME_PROJ_T) -> None:
+    async for osc, _, prj, pkg in home_project:
+        # ensure that there is a commit here
+        await upload_file_contents(
+            osc,
+            prj=prj,
+            pkg=pkg,
+            file="emacs.changes",
+            new_contents="nothing here yet but tumbleweeds",
+        )
+
+        hist = await fetch_package_history(osc, prj, pkg)
+        req = await submit_package(
+            osc,
+            source_prj=prj.name,
+            pkg=pkg.name,
+            dest_prj="openSUSE:Factory",
+            revision=PackageRevision.LATEST,
+        )
+
+        assert req.action[0].source.rev == hist[0].srcmd5
+
+
+@pytest.mark.asyncio
+async def test_request_with_revision_for_package_without_history(
+    home_project: HOME_PROJ_T,
+) -> None:
+    async for osc, _, prj, pkg in home_project:
+        assert not await fetch_package_history(osc, prj, pkg)
+
+        with pytest.raises(ValueError) as val_err_ctx:
+            await submit_package(
+                osc,
+                source_prj=prj.name,
+                pkg=pkg.name,
+                dest_prj="openSUSE:Factory",
+                revision=PackageRevision.LATEST,
+            )
+
+        assert "no history" in str(val_err_ctx.value)
