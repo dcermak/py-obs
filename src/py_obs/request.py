@@ -5,6 +5,7 @@ import xml.etree.ElementTree as ET
 from dataclasses import Field, dataclass, field
 from typing import ClassVar, NoReturn, TypeVar, overload
 import typing
+from py_obs.history import fetch_package_history
 from py_obs.osc import Osc
 from py_obs.person import Person2
 
@@ -308,6 +309,12 @@ async def search_for_requests(
     return _RequestCollection.from_xml(ET.fromstring(await res.read())).request
 
 
+@enum.unique
+class PackageRevision(enum.Enum):
+    #: use the latest revision
+    LATEST = enum.auto()
+
+
 async def submit_package(
     osc: Osc,
     source_prj: str | Project,
@@ -317,6 +324,7 @@ async def submit_package(
     description: str = "",
     supersede_old_request: bool = True,
     requests_to_supersede: list[Request | int] | None = None,
+    revision: str | PackageRevision | None = None,
 ) -> Request:
     """Create a new submitrequest of the package ``pkg`` from the source project
     ``source_prj`` to the destination ``dest_prj``. If the destination package
@@ -332,15 +340,40 @@ async def submit_package(
     Both ``supersede_old_request`` and ``requests_to_supersede`` can be provided
     at the same time.
 
+    The ``revision`` argument can optionally be provided to specify the exact
+    revision which should be submitted. By default no revision is specified. If
+    the value is :py:attr:`~py_obs.request.PackageRevision.LATEST`, then the
+    srcmd5 of the latest revision of the source package will be used.
+
     """
     ACTION = RequestActionType.SUBMIT
 
+    src_prj_name: str = source_prj if isinstance(source_prj, str) else source_prj.name
     src_pkg_name: str = pkg if isinstance(pkg, str) else pkg.name
     dest_pkg_name: str = (
         src_pkg_name
         if dest_pkg is None
         else (dest_pkg if isinstance(dest_pkg, str) else dest_pkg.name)
     )
+
+    rev: str | None = None
+    if isinstance(revision, PackageRevision):
+        assert revision == PackageRevision.LATEST
+
+        hist = await fetch_package_history(osc, source_prj, pkg, limit=1)
+        if not hist:
+            raise ValueError(
+                f"Package {src_prj_name}/{src_pkg_name} has no history, cannot obtain srcmd5"
+            )
+
+        if not (rev := hist[0].srcmd5):
+            raise ValueError(
+                "HEAD of package {src_prj_name}/{src_pkg_name} has no srcmd5"
+            )
+
+    else:
+        rev = revision
+
     rq = Request(
         id=None,
         creator=osc.username,
@@ -349,10 +382,7 @@ async def submit_package(
             RequestAction(
                 type=ACTION,
                 source=RequestSource(
-                    project=(
-                        source_prj if isinstance(source_prj, str) else source_prj.name
-                    ),
-                    package=src_pkg_name,
+                    project=src_prj_name, package=src_pkg_name, rev=rev
                 ),
                 target=RequestTarget(
                     project=(dest_prj if isinstance(dest_prj, str) else dest_prj.name),
