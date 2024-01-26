@@ -216,13 +216,11 @@ def _request_base_route(
 
 
 @overload
-async def fetch_request(osc: Osc, *, request: Request) -> Request:
-    ...
+async def fetch_request(osc: Osc, *, request: Request) -> Request: ...
 
 
 @overload
-async def fetch_request(osc: Osc, *, request_id: int) -> Request:
-    ...
+async def fetch_request(osc: Osc, *, request_id: int) -> Request: ...
 
 
 async def fetch_request(
@@ -236,8 +234,7 @@ async def fetch_request(
 @overload
 async def search_for_requests(
     osc: Osc,
-) -> NoReturn:
-    ...
+) -> NoReturn: ...
 
 
 @overload
@@ -251,8 +248,7 @@ async def search_for_requests(
     roles: list[PersonRole] | None = None,
     ids: list[int] | None = None,
     types: list[RequestActionType] | None = None,
-) -> list[Request]:
-    ...
+) -> list[Request]: ...
 
 
 async def search_for_requests(
@@ -444,15 +440,13 @@ async def submit_package(
 @overload
 async def change_state(
     osc: Osc, *, request: Request, new_state: RequestStatus, comment: str | None = None
-) -> None:
-    ...
+) -> None: ...
 
 
 @overload
 async def change_state(
     osc: Osc, *, request_id: int, new_state: RequestStatus, comment: str | None = None
-) -> None:
-    ...
+) -> None: ...
 
 
 async def change_state(
@@ -474,13 +468,11 @@ async def change_state(
 
 
 @overload
-async def delete(osc: Osc, *, request: Request, comment: str | None = None) -> None:
-    ...
+async def delete(osc: Osc, *, request: Request, comment: str | None = None) -> None: ...
 
 
 @overload
-async def delete(osc: Osc, *, request_id: int, comment: str | None = None) -> None:
-    ...
+async def delete(osc: Osc, *, request_id: int, comment: str | None = None) -> None: ...
 
 
 async def delete(
