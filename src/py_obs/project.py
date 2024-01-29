@@ -95,8 +95,7 @@ async def search_for_maintainers(
     pkg: Package,
     roles: list[PersonRole] | None = None,
     groups_to_ignore: list[str] | None = None,
-) -> PackageMaintainers:
-    ...
+) -> PackageMaintainers: ...
 
 
 @overload
@@ -106,8 +105,7 @@ async def search_for_maintainers(
     pkg_name: str,
     roles: list[PersonRole] | None = None,
     groups_to_ignore: list[str] | None = None,
-) -> PackageMaintainers:
-    ...
+) -> PackageMaintainers: ...
 
 
 async def search_for_maintainers(
@@ -172,25 +170,21 @@ async def search_for_maintainers(
 
 
 @overload
-async def send_meta(osc: Osc, *, prj: Project) -> None:
-    ...
+async def send_meta(osc: Osc, *, prj: Project) -> None: ...
 
 
 @overload
-async def send_meta(osc: Osc, *, prj: Project, pkg: Package) -> None:
-    ...
+async def send_meta(osc: Osc, *, prj: Project, pkg: Package) -> None: ...
 
 
 @overload
-async def send_meta(osc: Osc, *, prj_name: str, prj_meta: ET.Element) -> None:
-    ...
+async def send_meta(osc: Osc, *, prj_name: str, prj_meta: ET.Element) -> None: ...
 
 
 @overload
 async def send_meta(
     osc: Osc, *, prj_name: str, pkg_name: str, pkg_meta: ET.Element
-) -> None:
-    ...
+) -> None: ...
 
 
 async def send_meta(
@@ -226,15 +220,13 @@ async def send_meta(
 
 
 @overload
-async def delete(osc: Osc, *, prj: Project | str, force: bool = False) -> None:
-    ...
+async def delete(osc: Osc, *, prj: Project | str, force: bool = False) -> None: ...
 
 
 @overload
 async def delete(
     osc: Osc, *, prj: Project | str, pkg: Package | str, force: bool = False
-) -> None:
-    ...
+) -> None: ...
 
 
 async def delete(
@@ -255,13 +247,13 @@ async def delete(
 
 
 @overload
-async def fetch_meta(osc: Osc, *, prj: Project | str) -> Project:
-    ...
+async def fetch_meta(osc: Osc, *, prj: Project | str) -> Project: ...
 
 
 @overload
-async def fetch_meta(osc: Osc, *, prj: Project | str, pkg: Package | str) -> Package:
-    ...
+async def fetch_meta(
+    osc: Osc, *, prj: Project | str, pkg: Package | str
+) -> Package: ...
 
 
 async def fetch_meta(

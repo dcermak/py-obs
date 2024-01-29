@@ -37,8 +37,7 @@ class SignatureAuth(aiohttp.BasicAuth):
     def encode(self) -> str:
         if not os.path.isfile(self.ssh_key_path):  # type: ignore[attr-defined]
             raise RuntimeError(
-                "The specified SSH key file does not exist: "
-                + self.ssh_key_path  # type: ignore[attr-defined]
+                "The specified SSH key file does not exist: " + self.ssh_key_path  # type: ignore[attr-defined]
             )
 
         challenge = self.response_headers.get(  # type: ignore[attr-defined]
