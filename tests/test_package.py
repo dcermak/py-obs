@@ -1,8 +1,14 @@
 import xml.etree.ElementTree as ET
 import pytest
-from py_obs.project import DevelProject, Package, Person, fetch_meta
+from py_obs.project import (
+    DevelProject,
+    Package,
+    Person,
+    branch_package,
+    fetch_meta,
+)
 from py_obs.xml_factory import StrElementField
-from tests.conftest import HOME_PROJ_T
+from tests.conftest import HOME_PROJ_T, ProjectCleaner
 
 
 @pytest.mark.parametrize(
@@ -51,3 +57,59 @@ async def test_fetch_package_meta(home_project: HOME_PROJ_T):
             assert await fetch_meta(osc_, prj=prj, pkg=pkg) == pkg
             assert await fetch_meta(osc_, prj=prj.name, pkg=pkg) == pkg
             assert await fetch_meta(osc_, prj=prj, pkg=pkg.name) == pkg
+
+
+@pytest.mark.asyncio
+async def test_branch_package(home_project: HOME_PROJ_T):
+    async for osc, admin_osc, prj, pkg in home_project:
+        async with ProjectCleaner(
+            admin_osc, branch_prj_name := f"home:{osc.username}:branches:{prj.name}"
+        ) as _:
+            target_prj, target_pkg = await branch_package(osc, prj=prj, pkg=pkg)
+            assert target_pkg == pkg.name
+            assert target_prj == branch_prj_name
+
+
+@pytest.mark.asyncio
+async def test_branch_package_with_target_project(home_project: HOME_PROJ_T):
+    async for osc, admin_osc, prj, pkg in home_project:
+        async with ProjectCleaner(
+            admin_osc, branch_prj_name := f"home:{osc.username}:test_destination"
+        ) as _:
+            target_prj, target_pkg = await branch_package(
+                osc, prj=prj, pkg=pkg, target_project=branch_prj_name
+            )
+            assert target_pkg == pkg.name
+            assert target_prj == branch_prj_name
+
+
+@pytest.mark.asyncio
+async def test_branch_package_with_target_package(home_project: HOME_PROJ_T):
+    async for osc, admin_osc, prj, pkg in home_project:
+        async with ProjectCleaner(
+            admin_osc, branch_prj_name := f"home:{osc.username}:branches:{prj.name}"
+        ) as _:
+            target_prj, target_pkg = await branch_package(
+                osc, prj=prj, pkg=pkg, target_package=(tgt_pkg := "foobar")
+            )
+            assert target_pkg == tgt_pkg
+            assert target_prj == branch_prj_name
+
+
+@pytest.mark.asyncio
+async def test_branch_package_with_target_project_and_package(
+    home_project: HOME_PROJ_T,
+):
+    async for osc, admin_osc, prj, pkg in home_project:
+        async with ProjectCleaner(
+            admin_osc, branch_prj_name := f"home:{osc.username}:test_dest"
+        ) as _:
+            target_prj, target_pkg = await branch_package(
+                osc,
+                prj=prj,
+                pkg=pkg,
+                target_project=branch_prj_name,
+                target_package=(tgt_pkg := "other-package-name"),
+            )
+            assert target_pkg == tgt_pkg
+            assert target_prj == branch_prj_name
