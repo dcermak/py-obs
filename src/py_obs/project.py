@@ -13,6 +13,7 @@ from py_obs.person import (
     UserGroup,
     fetch_group,
 )
+from py_obs.status import Status
 from .xml_factory import MetaMixin, StrElementField
 
 
@@ -445,3 +446,52 @@ async def fetch_all_files(
     await asyncio.gather(*tasks)
 
     return res
+
+
+async def branch_package(
+    osc: Osc,
+    prj: str | Project,
+    pkg: Package | str,
+    target_project: str | Project = "",
+    target_package: str | Package = "",
+) -> tuple[str, str]:
+    """Create a branched package of the package `prj/pkg`. Optionally it is
+    possible to specify a target package and/or a target project. If no values
+    are given, then the target package name is equal to the original package
+    name and the target project name is `home:$username:branches:$prj`.
+
+    """
+
+    prj_name, pkg_name = _prj_and_pkg_name(prj, pkg)
+    params = {
+        "cmd": "branch",
+        "package": pkg_name,
+        "project": prj_name,
+        "update_project_attribute": "OBS:UpdateProject",
+    }
+
+    if target_project:
+        params["target_project"] = (
+            target_project if isinstance(target_project, str) else target_project.name
+        )
+
+    if target_package:
+        params["target_package"] = (
+            target_package if isinstance(target_package, str) else target_package.name
+        )
+
+    branch_status = await Status.from_response(
+        await osc.api_request("/source", params=params, method="POST")
+    )
+
+    target_prj = branch_status.data.get(tgt_prj_key := "targetproject")
+    target_pkg = branch_status.data.get(tgt_pkg_key := "targetpackage")
+
+    if not target_prj:
+        raise RuntimeError(f"{tgt_prj_key} entry missing from OBS status")
+    if not target_pkg:
+        raise RuntimeError(f"{tgt_pkg_key} entry missing from OBS status")
+
+    return (target_prj if isinstance(target_prj, str) else target_prj[0]), (
+        target_pkg if isinstance(target_pkg, str) else target_pkg[0]
+    )

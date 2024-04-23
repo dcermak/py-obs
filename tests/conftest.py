@@ -1,6 +1,7 @@
 import asyncio
+from dataclasses import dataclass
 import os
-from typing import AsyncGenerator
+from typing import AsyncGenerator, Self
 import pytest
 
 from py_obs.osc import ObsException, Osc
@@ -62,3 +63,29 @@ async def home_project(local_osc: LOCAL_OSC_T) -> HOME_PROJ_T:
             yield osc, admin, prj, pkg
         finally:
             await project.delete(osc, prj=prj)
+
+
+@dataclass(frozen=True)
+class ProjectCleaner:
+    """Context manager for ensuring that a specified project does not exist
+    after entering and after exiting the context manager.
+
+    """
+
+    osc: Osc
+
+    project: project.Project | str
+
+    async def __aenter__(self) -> Self:
+        try:
+            await project.delete(self.osc, prj=self.project, force=True)
+        except ObsException:
+            pass
+
+        return self
+
+    async def __aexit__(self, exc_type, exc, tb) -> None:
+        try:
+            await project.delete(self.osc, prj=self.project, force=True)
+        except ObsException:
+            pass
