@@ -45,7 +45,7 @@ jobs:
           pip install --upgrade poetry
           poetry install
 
-      - run: poetry run ruff src
+      - run: poetry run ruff check src
 
       - run: poetry run mypy src
 
