@@ -1,7 +1,8 @@
+import re
 import pytest
 
 from py_obs.history import fetch_package_history
-from py_obs.project import delete, upload_file_contents
+from py_obs.project import delete, fetch_package_diff, upload_file_contents
 
 from tests.conftest import HOME_PROJ_T
 
@@ -39,3 +40,36 @@ async def test_history(home_project: HOME_PROJ_T) -> None:
 
         # deleting a package results in another commit (= the deletion commit)
         assert (await fetch_package_history(osc, prj, pkg, deleted=True))[0:-1] == hist2
+
+
+@pytest.mark.asyncio
+async def test_diff(home_project: HOME_PROJ_T) -> None:
+    FNAME = "readme.txt"
+    CONTENTS1 = "first version"
+    CONTENTS2 = "second revision"
+
+    async for osc, _, prj, pkg in home_project:
+        await upload_file_contents(osc, prj, pkg, FNAME, CONTENTS1)
+        first_diff = await fetch_package_diff(osc, prj, pkg)
+        assert re.search(rf"^\+{CONTENTS1}$", first_diff, re.MULTILINE)
+
+        await upload_file_contents(osc, prj, pkg, FNAME, CONTENTS1 + "\n" + CONTENTS2)
+        second_diff = await fetch_package_diff(osc, prj, pkg)
+        assert re.search(rf"^\+{CONTENTS2}$", second_diff, re.MULTILINE)
+
+        await upload_file_contents(osc, prj, pkg, FNAME, CONTENTS2)
+        third_diff = await fetch_package_diff(osc, prj, pkg)
+        assert re.search(rf"^-{CONTENTS1}", third_diff, re.MULTILINE)
+
+        await upload_file_contents(
+            osc,
+            prj,
+            pkg,
+            (other_file := "don-t-readme.txt"),
+            "\n".join((FNAME, CONTENTS1, CONTENTS2)),
+        )
+        assert not await fetch_package_diff(osc, prj, pkg, limit_to_files=[FNAME])
+        assert await fetch_package_diff(osc, prj, pkg, limit_to_files=[other_file])
+
+        assert first_diff == await fetch_package_diff(osc, prj, pkg, revision=1)
+        assert second_diff == await fetch_package_diff(osc, prj, pkg, revision=2)

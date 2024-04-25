@@ -233,7 +233,7 @@ class Osc:
         self,
         route: str,
         payload: bytes | str | None = None,
-        params: dict[str, str] | None = None,
+        params: typing.Mapping[str, str | list[str]] | None = None,
         method: typing.Literal["GET", "POST", "PUT", "DELETE"] = "GET",
     ) -> aiohttp.ClientResponse:
         if self.public:

@@ -448,6 +448,46 @@ async def fetch_all_files(
     return res
 
 
+async def fetch_package_diff(
+    osc: Osc,
+    prj: str | Project,
+    pkg: Package | str,
+    expand_links: bool = True,
+    limit_to_files: list[str] | None = None,
+    revision: int | str | None = None,
+) -> str:
+    """Fetch the server side rendered diff of a package.
+
+    Parameters:
+    - prj, pkg: the package to diff
+    - expand_links: whether package links should be expanded before diffing
+    - limit_to_files: only display the diff of the selected files
+    - revision: specify the revision, which diff should be displayed. Defaults
+      to the latest revision
+    """
+    prj_name, pkg_name = _prj_and_pkg_name(prj, pkg)
+    params: dict[str, str | list[str]] = {
+        "cmd": "diff",
+        "filelimit": "0",
+        "expand": "1" if expand_links else "0",
+    }
+    if limit_to_files:
+        params["file[]"] = limit_to_files
+
+    if revision:
+        params["rev"] = str(revision)
+
+    return (
+        await (
+            await osc.api_request(
+                f"/source/{prj_name}/{pkg_name}",
+                method="POST",
+                params=params,
+            )
+        ).read()
+    ).decode()
+
+
 async def branch_package(
     osc: Osc,
     prj: str | Project,
