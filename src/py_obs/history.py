@@ -1,5 +1,8 @@
 from dataclasses import dataclass
+import datetime
+import xml.etree.ElementTree as ET
 from typing import ClassVar
+import typing
 from py_obs.osc import Osc
 from py_obs.project import Package, Project
 
@@ -21,6 +24,8 @@ class Revision(MetaMixin):
 
     version: StrElementField
 
+    time: datetime.datetime
+
     #: committer
     user: StrElementField
 
@@ -28,6 +33,16 @@ class Revision(MetaMixin):
     comment: StrElementField | None = None
 
     _element_name: ClassVar[str] = "revision"
+
+    @staticmethod
+    def _datetime_from_xml(xml_element: ET.Element) -> datetime.datetime | None:
+        if (elem := xml_element.find("time")) is not None:
+            return datetime.datetime.fromtimestamp(float(elem.text or "0"))
+        return None
+
+    _field_converters: typing.ClassVar[
+        dict[str, typing.Callable[[ET.Element], typing.Any]] | None
+    ] = {"time": _datetime_from_xml}
 
 
 @dataclass(frozen=True)
