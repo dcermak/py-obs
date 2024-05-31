@@ -12,6 +12,8 @@ from py_obs.xml_factory import StrElementField
 
 LOCAL_OSC_T = AsyncGenerator[tuple[Osc, Osc], None]
 
+OSC_FROM_ENV_T = AsyncGenerator[Osc, None]
+
 
 def osc_test_user_name() -> str:
     return os.getenv("OSC_USER", "obsTestUser")
@@ -19,6 +21,21 @@ def osc_test_user_name() -> str:
 
 def local_obs_apiurl() -> str:
     return os.getenv("OBS_URL", "http://localhost:3000")
+
+
+@pytest.fixture(scope="session")
+async def osc_from_env() -> OSC_FROM_ENV_T:
+    osc: Osc | None
+    try:
+        yield (
+            osc := Osc(
+                username=osc_test_user_name(),
+                password=os.getenv("OSC_PASSWORD", "surely-invalid"),
+            )
+        )
+    finally:
+        if osc:
+            await osc.teardown()
 
 
 @pytest.fixture(scope="function")

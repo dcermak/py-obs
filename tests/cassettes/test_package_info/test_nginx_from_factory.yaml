@@ -1,0 +1,59 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: GET
+    uri: /source/openSUSE:Factory/nginx?view=info&parse=1
+  response:
+    body:
+      string: "<sourceinfo package=\"nginx\" rev=\"89\" vrev=\"2\" srcmd5=\"6c3e9cd13302b4b3431557c2b8851ceb\"\
+        \ verifymd5=\"6c3e9cd13302b4b3431557c2b8851ceb\">\n  <filename>nginx.spec</filename>\n\
+        \  <name>nginx</name>\n  <version>1.25.5</version>\n  <release>0</release>\n\
+        \  <subpacks>nginx</subpacks>\n  <subpacks>nginx-source</subpacks>\n  <deps>nginx-macros</deps>\n\
+        \  <deps>gcc-c++</deps>\n  <deps>libatomic-ops-devel</deps>\n  <deps>pkgconfig</deps>\n\
+        \  <deps>sysuser-shadow</deps>\n  <deps>sysuser-tools</deps>\n  <deps>vim</deps>\n\
+        \  <deps>pkgconfig(gdlib)</deps>\n  <deps>pkgconfig(libpcre2-8)</deps>\n \
+        \ <deps>pkgconfig(libxslt)</deps>\n  <deps>pkgconfig(openssl)</deps>\n  <deps>pkgconfig(systemd)</deps>\n\
+        \  <deps>pkgconfig(zlib)</deps>\n</sourceinfo>\n"
+    headers:
+      Cache-Control:
+      - private, no-transform
+      - no-cache
+      Content-Length:
+      - '710'
+      Content-Type:
+      - text/xml
+      Date:
+      - Fri, 31 May 2024 14:17:21 GMT
+      Server:
+      - Apache/2.4.51 (Linux/SUSE)
+      Strict-Transport-Security:
+      - max-age=31536000
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20240531T090908.8a4ff22f0
+      x-opensuse-runtimes:
+      - '{"view":null,"db":5.3467230796813965,"backend":0}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - 8b89fd0f-c3f5-4e41-9fd0-2c5748c3b8c4
+      x-runtime:
+      - '0.022292'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+version: 1
