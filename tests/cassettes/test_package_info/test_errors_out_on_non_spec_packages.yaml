@@ -1,0 +1,53 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: GET
+    uri: /source/openSUSE:Factory/spack-image?view=info&parse=1
+  response:
+    body:
+      string: "<sourceinfo package=\"spack-image\" rev=\"5\" vrev=\"5\" srcmd5=\"\
+        521f44faa87e9871fdeb3b9d92e8e18c\" verifymd5=\"521f44faa87e9871fdeb3b9d92e8e18c\"\
+        >\n  <error>no file found for build type 'spec'</error>\n</sourceinfo>\n"
+    headers:
+      Cache-Control:
+      - private, no-transform
+      - no-cache
+      Content-Length:
+      - '206'
+      Content-Type:
+      - text/xml
+      Date:
+      - Fri, 31 May 2024 14:23:12 GMT
+      Server:
+      - Apache/2.4.51 (Linux/SUSE)
+      Strict-Transport-Security:
+      - max-age=31536000
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20240531T090908.8a4ff22f0
+      x-opensuse-runtimes:
+      - '{"view":null,"db":3.7443350553512573,"backend":0}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - 898c4763-f591-4f54-8b4a-f9b70b7d2385
+      x-runtime:
+      - '0.016359'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+version: 1

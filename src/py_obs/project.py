@@ -535,3 +535,88 @@ async def branch_package(
     return (target_prj if isinstance(target_prj, str) else target_prj[0]), (
         target_pkg if isinstance(target_pkg, str) else target_pkg[0]
     )
+
+
+@dataclass(frozen=True)
+class PackageSourceInfo(MetaMixin):
+    """Source information of a rpm-spec based package."""
+
+    #: The package name
+    package: str
+
+    #: package source revision
+    rev: str
+    #: strictly increasing revision counter per package version
+    vrev: str
+
+    #: source package md5 hash
+    srcmd5: str
+
+    #: filename of the spec file/build recipe that was used
+    filename: StrElementField
+
+    #: name of the main package
+    name: StrElementField
+
+    #: main package version
+    version: StrElementField
+
+    #: main package release
+    release: StrElementField
+
+    #: project from which this package has been linked in
+    originproject: StrElementField | None = None
+
+    #: list of subpackages
+    subpacks: list[str] = field(default_factory=list)
+
+    #: list of dependent packages
+    deps: list[str] = field(default_factory=list)
+
+    #: Package build prerequisites
+    prereqs: list[str] = field(default_factory=list)
+
+    _element_name: ClassVar[str] = "sourceinfo"
+
+
+@dataclass(frozen=True)
+class _BrokenPackageSourceInfo(MetaMixin):
+    """Required due to
+    https://github.com/openSUSE/open-build-service/issues/16233.
+
+    This is the representation of an "error" response from OBS for packages that
+    are not spec files.
+
+    """
+
+    #: filename of the spec file/build recipe that was used
+    error: StrElementField
+
+    _element_name: ClassVar[str] = "sourceinfo"
+
+
+async def fetch_package_info(
+    osc: Osc,
+    prj: str | Project,
+    pkg: Package | str,
+) -> PackageSourceInfo:
+    """Fetch the sourceinfo of a package from the buildservice. Includes
+    extended information like dependencies, linked projects, subpackages,
+    version, etc.
+
+    """
+    prj_name, pkg_name = _prj_and_pkg_name(prj, pkg)
+
+    data = await (
+        await osc.api_request(
+            f"/source/{prj_name}/{pkg_name}", params={"view": "info", "parse": "1"}
+        )
+    ).read()
+
+    try:
+        return PackageSourceInfo.from_xml(data)
+    except ValueError:
+        err = (_BrokenPackageSourceInfo.from_xml(data)).error
+        raise ValueError(
+            f"OBS could not parse the package {prj_name}/{pkg_name}: {err}"
+        )

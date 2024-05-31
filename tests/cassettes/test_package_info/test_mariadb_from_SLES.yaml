@@ -1,0 +1,79 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: GET
+    uri: /source/SUSE:SLE-15-SP5:Update/mariadb?view=info&parse=1
+  response:
+    body:
+      string: "<sourceinfo package=\"mariadb\" rev=\"8\" vrev=\"3.30\" srcmd5=\"7aa79a6c980be4ec33c71f066b181ab6\"\
+        \ lsrcmd5=\"0819a497a36c1ad10a3304dc72a19691\" verifymd5=\"113565c739b67dc519f18a2c2e14481d\"\
+        >\n  <filename>mariadb.spec</filename>\n  <originproject>SUSE:SLE-15-SP4:Update</originproject>\n\
+        \  <linked project=\"SUSE:SLE-15-SP5:GA\" package=\"mariadb\"/>\n  <linked\
+        \ project=\"SUSE:SLE-15-SP4:Update\" package=\"mariadb\"/>\n  <linked project=\"\
+        SUSE:SLE-15-SP5:Update\" package=\"mariadb.30339\"/>\n  <linked project=\"\
+        SUSE:SLE-15-SP5:GA\" package=\"mariadb.30339\"/>\n  <linked project=\"SUSE:SLE-15-SP4:Update\"\
+        \ package=\"mariadb.30339\"/>\n  <name>mariadb</name>\n  <version>10.6.15</version>\n\
+        \  <release>0</release>\n  <subpacks>mariadb</subpacks>\n  <subpacks>libmariadbd19</subpacks>\n\
+        \  <subpacks>libmariadbd-devel</subpacks>\n  <subpacks>mariadb-rpm-macros</subpacks>\n\
+        \  <subpacks>mariadb-client</subpacks>\n  <subpacks>mariadb-errormessages</subpacks>\n\
+        \  <subpacks>mariadb-bench</subpacks>\n  <subpacks>mariadb-test</subpacks>\n\
+        \  <subpacks>mariadb-tools</subpacks>\n  <deps>bison</deps>\n  <deps>cmake</deps>\n\
+        \  <deps>dos2unix</deps>\n  <deps>fdupes</deps>\n  <deps>gcc-c++</deps>\n\
+        \  <deps>krb5-devel</deps>\n  <deps>libaio-devel</deps>\n  <deps>libarchive-devel</deps>\n\
+        \  <deps>libbz2-devel</deps>\n  <deps>libedit-devel</deps>\n  <deps>libevent-devel</deps>\n\
+        \  <deps>liblz4-devel</deps>\n  <deps>libtool</deps>\n  <deps>libxml2-devel</deps>\n\
+        \  <deps>ncurses-devel</deps>\n  <deps>openssl-devel</deps>\n  <deps>pam-devel</deps>\n\
+        \  <deps>pcre2-devel</deps>\n  <deps>pkgconfig</deps>\n  <deps>procps</deps>\n\
+        \  <deps>python3</deps>\n  <deps>sqlite</deps>\n  <deps>sysuser-tools</deps>\n\
+        \  <deps>tcpd-devel</deps>\n  <deps>time</deps>\n  <deps>unixODBC-devel</deps>\n\
+        \  <deps>zlib-devel</deps>\n  <deps>perl(Data::Dumper)</deps>\n  <deps>perl(Env)</deps>\n\
+        \  <deps>perl(Exporter)</deps>\n  <deps>perl(Fcntl)</deps>\n  <deps>perl(File::Temp)</deps>\n\
+        \  <deps>perl(Getopt::Long)</deps>\n  <deps>perl(IPC::Open3)</deps>\n  <deps>perl(Memoize)</deps>\n\
+        \  <deps>perl(Socket)</deps>\n  <deps>perl(Symbol)</deps>\n  <deps>perl(Sys::Hostname)</deps>\n\
+        \  <deps>perl(Test::More)</deps>\n  <deps>perl(Time::HiRes)</deps>\n  <deps>pkgconfig(libsystemd)</deps>\n\
+        \  <deps>-user(mysql)</deps>\n  <deps>lzo-devel</deps>\n  <deps>judy-devel</deps>\n\
+        \  <deps>boost-devel</deps>\n  <prereqs>permissions</prereqs>\n  <prereqs>user(mysql)</prereqs>\n\
+        </sourceinfo>\n"
+    headers:
+      Cache-Control:
+      - private, no-transform
+      - no-cache
+      Content-Length:
+      - '2336'
+      Content-Type:
+      - text/xml
+      Date:
+      - Fri, 31 May 2024 14:11:48 GMT
+      Server:
+      - Apache/2.4.51 (Linux/SUSE)
+      Strict-Transport-Security:
+      - max-age=31536000
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20240531T090908.8a4ff22f0
+      x-opensuse-runtimes:
+      - '{"view":null,"db":8.006132125854492,"backend":0}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - d81d06b6-9e55-4839-bfd3-5ef3e0524b6f
+      x-runtime:
+      - '0.039760'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+version: 1
