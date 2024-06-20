@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from pathlib import Path
 import os.path
 
@@ -132,3 +133,25 @@ async def test_read_from_oscrc_error(
         Osc.from_oscrc()
 
     assert err_msg in str(val_err_ctx)
+
+
+@pytest.mark.vcr
+@pytest.mark.asyncio
+async def test_backoff() -> None:
+    """Test the exponential back-off in Osc.api_request.
+
+    We handcraft a vcr cassette that has four error requests with errors 500,
+    502, 503 and 504. api_request should retry the request up to five times with
+    exponentially increasing times.
+
+    """
+    before = datetime.now()
+    resp = await Osc("foo", password="irrelevant").api_request("/test")
+    after = datetime.now()
+
+    # we have 4 errors, i.e. we wait for at least (1 + 2 + 4 + 8)s = 15
+    assert after - before >= timedelta(seconds=15)
+
+    # final message is a 200
+    assert resp.status == 200
+    assert (await resp.text()) == "Success"

@@ -1,0 +1,82 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: GET
+    uri: /test
+  response:
+    body:
+      string: "Error"
+    headers:
+      Content-Type:
+      - text/plain
+    status:
+      code: 500
+      message: Internal Server Error
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: GET
+    uri: /test
+  response:
+    body:
+      string: "Error"
+    headers:
+      Content-Type:
+      - text/plain
+    status:
+      code: 502
+      message: Bad Gateway
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: GET
+    uri: /test
+  response:
+    body:
+      string: "Error"
+    headers:
+      Content-Type:
+      - text/plain
+    status:
+      code: 503
+      message: Service Unavailable
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: GET
+    uri: /test
+  response:
+    body:
+      string: "Error"
+    headers:
+      Content-Type:
+      - text/plain
+    status:
+      code: 504
+      message: Gateway Timeout
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: GET
+    uri: /test
+  response:
+    body:
+      string: "Success"
+    headers:
+      Content-Type:
+      - text/plain
+    status:
+      code: 200
+      message: Ok
+version: 1
