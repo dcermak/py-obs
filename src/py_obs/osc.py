@@ -1,3 +1,4 @@
+import asyncio
 import configparser
 import dataclasses
 import http.cookiejar
@@ -176,6 +177,9 @@ class Osc:
         }
     )
 
+    #: status codes on which we retry a request
+    _RETRY_STATUSES: typing.ClassVar[tuple[int, ...]] = (500, 502, 503, 504)
+
     @staticmethod
     def from_oscrc(api_url: str | None = None) -> "Osc":
         """Create a Osc instance from the oscrc config file."""
@@ -236,6 +240,22 @@ class Osc:
         params: typing.Mapping[str, str | list[str]] | None = None,
         method: typing.Literal["GET", "POST", "PUT", "DELETE"] = "GET",
     ) -> aiohttp.ClientResponse:
+        """Perform a API request against the configured build service instance
+        using the supplied route.
+
+        This function is a wrapper around aiohttp's ``session.request`` but
+        performs the following additional steps:
+
+        - retry requests that receive an error 500, 502, 503 or 504 with an
+          exponentially increasing wait time in between (the status codes
+          defined in :py:attr:`~Osc._RETRY_STATUSES`)
+
+        - authenticate with the IBS ssh auth
+
+        - optionally prepend ``/public/`` to the route if the
+          :py:attr:`~Osc.public` flag is set
+
+        """
         if self.public:
             route = f"/public{route}"
 
@@ -252,14 +272,25 @@ class Osc:
             headers.append(cookie)  # type: ignore[arg-type]
 
         try:
-            return await self._session.request(
-                method=method,
-                params=params,
-                url=route,
-                data=payload,
-                headers=headers,
-                auth=self._auth,
-            )
+            sleep_time = 1
+            for _ in range(5):
+                resp = await self._session.request(
+                    method=method,
+                    params=params,
+                    url=route,
+                    data=payload,
+                    headers=headers,
+                    auth=self._auth,
+                )
+                if resp.status not in Osc._RETRY_STATUSES:
+                    return resp
+
+                await asyncio.sleep(sleep_time)
+                sleep_time *= 2
+
+            resp.raise_for_status()
+            assert False, "This code path must be unreachable"
+
         except aiohttp.ClientResponseError as cre_exc:
             if cre_exc.status != 401:
                 raise ObsException(**cre_exc.__dict__) from cre_exc
@@ -301,6 +332,13 @@ class Osc:
             return await self._session.request(
                 method=method, params=params, url=route, data=payload, auth=self._auth
             )
+
+    @staticmethod
+    async def _raise_for_status(resp: aiohttp.ClientResponse) -> None:
+        # mimic osc's behavior here
+        # https://github.com/openSUSE/osc/blob/110ddafbc0b1df235ea403b1ce3f6ab17cacc844/osc/connection.py#L236
+        if resp.status > 400 and resp.status not in Osc._RETRY_STATUSES:
+            resp.raise_for_status()
 
     def __post_init__(self) -> None:
         if not self.username and not self.public:
