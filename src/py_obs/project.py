@@ -615,7 +615,7 @@ async def fetch_package_info(
 
     try:
         return PackageSourceInfo.from_xml(data)
-    except ValueError:
+    except (ValueError, KeyError):
         err = (_BrokenPackageSourceInfo.from_xml(data)).error
         raise ValueError(
             f"OBS could not parse the package {prj_name}/{pkg_name}: {err}"

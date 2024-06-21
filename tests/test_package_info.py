@@ -134,3 +134,17 @@ async def test_errors_out_on_non_spec_packages(osc_from_env: OSC_FROM_ENV_T) -> 
             f"OBS could not parse the package {prj}/{pkg}: no file found for build type 'spec'"
             in str(val_err_ctx.value)
         )
+
+
+@pytest.mark.vcr(filter_headers=["authorization", "openSUSE_session"])
+@pytest.mark.asyncio
+async def test_errors_out_on_non_existing_package(osc_from_env: OSC_FROM_ENV_T) -> None:
+    prj, pkg = "SUSE:SLFO:Main:Build", "helm"
+    async for osc in osc_from_env:
+        with pytest.raises(ValueError) as val_err_ctx:
+            await fetch_package_info(osc, prj, pkg)
+
+        assert (
+            f"OBS could not parse the package {prj}/{pkg}: 404 package 'helm' does not exist"
+            in str(val_err_ctx.value)
+        )
