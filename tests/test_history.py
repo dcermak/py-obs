@@ -16,6 +16,8 @@ async def test_history(home_project: HOME_PROJ_T) -> None:
 
     async for osc, _, prj, pkg in home_project:
         start = datetime.now()
+        # obs does not write microseconds into the commit timestamps anymore
+        start = start.replace(microsecond=0)
 
         hist0 = await fetch_package_history(osc, prj, pkg)
         assert len(hist0) == 0
@@ -23,7 +25,8 @@ async def test_history(home_project: HOME_PROJ_T) -> None:
         await upload_file_contents(osc, prj, pkg, FNAME, CONTENTS1)
         hist1 = await fetch_package_history(osc, prj, pkg)
         assert len(hist1) == 1
-        assert hist1[0].time > start and hist1[0].time < datetime.now()
+        assert hist1[0].time >= start
+        assert hist1[0].time < datetime.now()
 
         await upload_file_contents(osc, prj, pkg, FNAME, CONTENTS2)
         hist2 = await fetch_package_history(osc, prj, pkg)
