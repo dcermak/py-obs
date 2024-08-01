@@ -35,22 +35,22 @@ ${CURL} -X POST "${OBS_URL}/person/${TEST_USER}?cmd=change_password" -d "nots3cr
 ${CURL} -X PUT "${OBS_URL}/group/testers" -d "<group>
 <title>testers</title>
 <person>
-<person user_id='${TEST_USER}'/>
+<person userid='${TEST_USER}'/>
 </person>
 </group>"
 
 ${CURL} -X PUT "${OBS_URL}/group/admins" -d "<group>
 <title>admins</title>
 <person>
-<person user_id='Admin'/>
+<person userid='Admin'/>
 </person>
 </group>"
 
 ${CURL} -X PUT "${OBS_URL}/group/everyone" -d "<group>
 <title>everyone</title>
 <person>
-<person user_id='Admin'/>
-<person user_id='${TEST_USER}'/>
+<person userid='Admin'/>
+<person userid='${TEST_USER}'/>
 </person>
 </group>"
 
