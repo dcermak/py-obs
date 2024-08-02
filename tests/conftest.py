@@ -57,18 +57,11 @@ async def home_project(local_osc: LOCAL_OSC_T) -> HOME_PROJ_T:
 
         # try to delete the home project in case it is left over from previous
         # unsuccessful test runs
-        try:
-            await project.delete(osc, prj=prj)
-        except ObsException:
-            pass
+        async with ProjectCleaner(osc, prj) as _:
+            await project.send_meta(osc, prj=prj)
+            await project.send_meta(osc, prj=prj, pkg=pkg)
 
-        await project.send_meta(osc, prj=prj)
-        await project.send_meta(osc, prj=prj, pkg=pkg)
-
-        try:
             yield osc, admin, prj, pkg
-        finally:
-            await project.delete(osc, prj=prj)
 
 
 @dataclass(frozen=True)
