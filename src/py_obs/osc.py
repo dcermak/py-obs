@@ -11,6 +11,7 @@ import typing
 import urllib.request
 
 import aiohttp
+from aiohttp.abc import AbstractCookieJar
 from multidict import CIMultiDictProxy
 from yarl import URL
 
@@ -166,10 +167,9 @@ class Osc:
     public: bool = False
     cookie_jar_path: str = os.path.expanduser("~/.local/state/osc/cookiejar")
 
+    _cookie_jar: CookieJar = None  # type: ignore[assignment]
     _auth: aiohttp.BasicAuth | SignatureAuth | None = None
-    _session: aiohttp.ClientSession = dataclasses.field(
-        default_factory=lambda: aiohttp.ClientSession()
-    )
+
     _default_headers: dict[str, str] = dataclasses.field(
         default_factory=lambda: {
             # https://github.com/openSUSE/open-build-service/issues/13737
@@ -267,71 +267,86 @@ class Osc:
             payload,
         )
 
-        headers = list(self._default_headers.items())
-        for cookie in self._session.cookie_jar.filter_cookies(URL(self.api_url)):
-            headers.append(cookie)  # type: ignore[arg-type]
+        assert (
+            self._cookie_jar is not None
+        ), "_cookie_jar must have been created in __post_init__"
 
-        try:
-            sleep_time = 1
-            for _ in range(5):
-                resp = await self._session.request(
+        async with aiohttp.ClientSession(
+            raise_for_status=True,
+            base_url=self.api_url,
+            headers=self._default_headers,
+            cookie_jar=typing.cast(AbstractCookieJar, self._cookie_jar),
+        ) as session:
+
+            headers = list(self._default_headers.items())
+            for cookie in session.cookie_jar.filter_cookies(URL(self.api_url)):
+                headers.append(cookie)  # type: ignore[arg-type]
+
+            try:
+                sleep_time = 1
+                for _ in range(5):
+                    resp = await session.request(
+                        method=method,
+                        params=params,
+                        url=route,
+                        data=payload,
+                        headers=headers,
+                        auth=self._auth,
+                    )
+                    if resp.status not in Osc._RETRY_STATUSES:
+                        return resp
+
+                    await asyncio.sleep(sleep_time)
+                    sleep_time *= 2
+
+                resp.raise_for_status()
+                assert False, "This code path must be unreachable"
+
+            except aiohttp.ClientResponseError as cre_exc:
+                if cre_exc.status != 401:
+                    raise ObsException(**cre_exc.__dict__) from cre_exc
+
+                if cre_exc.status == 401 and self.public:
+                    raise ObsException(**cre_exc.__dict__) from cre_exc
+
+                # TODO: lock and run the following code only in 1 thread; other
+                # threads should use session cookies again
+
+                # needed to make mypy happy, in theory cre_exc.headers can have a
+                # different type as well…
+                assert isinstance(cre_exc.headers, CIMultiDictProxy)
+                supported_auth_methods = [
+                    i.split(" ")[0].lower()
+                    for i in (cre_exc.headers).getall("WWW-Authenticate")
+                ]
+                LOGGER.debug(f"Supported auth methods: {supported_auth_methods}")
+
+                for auth_method in supported_auth_methods:
+                    if auth_method == "signature" and self.ssh_key_path:
+                        self._auth = SignatureAuth(
+                            login=self.username,
+                            ssh_key_path=self.ssh_key_path,
+                            response_headers=cre_exc.headers,
+                        )
+                        break
+                    elif auth_method == "basic" and self.password:
+                        self._auth = aiohttp.BasicAuth(
+                            login=self.username, password=self.password
+                        )
+                        break
+
+                if not self._auth:
+                    # we have no suitable auth handler, let's re-raise the original
+                    # exception
+                    raise ObsException(**cre_exc.__dict__) from cre_exc
+
+                return await session.request(
                     method=method,
                     params=params,
                     url=route,
                     data=payload,
-                    headers=headers,
                     auth=self._auth,
                 )
-                if resp.status not in Osc._RETRY_STATUSES:
-                    return resp
-
-                await asyncio.sleep(sleep_time)
-                sleep_time *= 2
-
-            resp.raise_for_status()
-            assert False, "This code path must be unreachable"
-
-        except aiohttp.ClientResponseError as cre_exc:
-            if cre_exc.status != 401:
-                raise ObsException(**cre_exc.__dict__) from cre_exc
-
-            if cre_exc.status == 401 and self.public:
-                raise ObsException(**cre_exc.__dict__) from cre_exc
-
-            # TODO: lock and run the following code only in 1 thread; other
-            # threads should use session cookies again
-
-            # needed to make mypy happy, in theory cre_exc.headers can have a
-            # different type as well…
-            assert isinstance(cre_exc.headers, CIMultiDictProxy)
-            supported_auth_methods = [
-                i.split(" ")[0].lower()
-                for i in (cre_exc.headers).getall("WWW-Authenticate")
-            ]
-            LOGGER.debug(f"Supported auth methods: {supported_auth_methods}")
-
-            for auth_method in supported_auth_methods:
-                if auth_method == "signature" and self.ssh_key_path:
-                    self._auth = SignatureAuth(
-                        login=self.username,
-                        ssh_key_path=self.ssh_key_path,
-                        response_headers=cre_exc.headers,
-                    )
-                    break
-                elif auth_method == "basic" and self.password:
-                    self._auth = aiohttp.BasicAuth(
-                        login=self.username, password=self.password
-                    )
-                    break
-
-            if not self._auth:
-                # we have no suitable auth handler, let's re-raise the original
-                # exception
-                raise ObsException(**cre_exc.__dict__) from cre_exc
-
-            return await self._session.request(
-                method=method, params=params, url=route, data=payload, auth=self._auth
-            )
 
     @staticmethod
     async def _raise_for_status(resp: aiohttp.ClientResponse) -> None:
@@ -353,12 +368,4 @@ class Osc:
         if self.password:
             self._auth = aiohttp.BasicAuth(login=self.username, password=self.password)
 
-        self._session = aiohttp.ClientSession(
-            raise_for_status=True,
-            base_url=self.api_url,
-            headers=self._default_headers,
-            cookie_jar=CookieJar(self.cookie_jar_path),  # type: ignore[arg-type]
-        )
-
-    async def teardown(self) -> None:
-        await self._session.close()
+        self._cookie_jar = CookieJar(self.cookie_jar_path)
