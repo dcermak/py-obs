@@ -16,7 +16,6 @@ def write_oscrc(tmp_path: Path, oscrc_contents: str, monkeypatch) -> None:
     monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path))
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     "oscrc,username,password,ssh_key_path,apiurl,apiurl_param",
     [
@@ -65,7 +64,7 @@ sshkey = id_ed22519
         ),
     ],
 )
-async def test_read_from_oscrc(
+def test_read_from_oscrc(
     tmp_path: Path,
     oscrc: str,
     monkeypatch,
@@ -82,8 +81,6 @@ async def test_read_from_oscrc(
     assert osc.password == password
     assert osc.ssh_key_path == ssh_key_path
     assert apiurl == osc.api_url
-
-    await osc.teardown()
 
 
 @pytest.mark.asyncio

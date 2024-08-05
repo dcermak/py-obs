@@ -1,4 +1,3 @@
-import asyncio
 from dataclasses import dataclass
 import os
 from typing import AsyncGenerator, Self
@@ -25,17 +24,10 @@ def local_obs_apiurl() -> str:
 
 @pytest.fixture(scope="session")
 async def osc_from_env() -> OSC_FROM_ENV_T:
-    osc: Osc | None
-    try:
-        yield (
-            osc := Osc(
-                username=osc_test_user_name(),
-                password=os.getenv("OSC_PASSWORD", "surely-invalid"),
-            )
-        )
-    finally:
-        if osc:
-            await osc.teardown()
+    yield Osc(
+        username=osc_test_user_name(),
+        password=os.getenv("OSC_PASSWORD", "surely-invalid"),
+    )
 
 
 @pytest.fixture(scope="function")
@@ -47,10 +39,7 @@ async def local_osc(request: pytest.FixtureRequest) -> LOCAL_OSC_T:
         api_url=(api_url := local_obs_apiurl()),
     )
     admin = Osc(username="Admin", password="opensuse", api_url=api_url)
-    try:
-        yield (local, admin)
-    finally:
-        await asyncio.gather(local.teardown(), admin.teardown())
+    yield (local, admin)
 
 
 HOME_PROJ_T = AsyncGenerator[tuple[Osc, Osc, project.Project, project.Package], None]
@@ -68,18 +57,11 @@ async def home_project(local_osc: LOCAL_OSC_T) -> HOME_PROJ_T:
 
         # try to delete the home project in case it is left over from previous
         # unsuccessful test runs
-        try:
-            await project.delete(osc, prj=prj)
-        except ObsException:
-            pass
+        async with ProjectCleaner(osc, prj) as _:
+            await project.send_meta(osc, prj=prj)
+            await project.send_meta(osc, prj=prj, pkg=pkg)
 
-        await project.send_meta(osc, prj=prj)
-        await project.send_meta(osc, prj=prj, pkg=pkg)
-
-        try:
             yield osc, admin, prj, pkg
-        finally:
-            await project.delete(osc, prj=prj)
 
 
 @dataclass(frozen=True)
