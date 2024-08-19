@@ -284,20 +284,28 @@ class Osc:
 
             try:
                 sleep_time = 1
+
                 for _ in range(5):
-                    resp = await session.request(
-                        method=method,
-                        params=params,
-                        url=route,
-                        data=payload,
-                        headers=headers,
-                        auth=self._auth,
-                    )
-                    if resp.status not in Osc._RETRY_STATUSES:
-                        return resp
+                    try:
+                        resp = await session.request(
+                            method=method,
+                            params=params,
+                            url=route,
+                            data=payload,
+                            headers=headers,
+                            auth=self._auth,
+                        )
+                        if resp.status not in Osc._RETRY_STATUSES:
+                            return resp
+                    except asyncio.TimeoutError:
+                        pass
 
                     await asyncio.sleep(sleep_time)
                     sleep_time *= 2
+                if resp is None:
+                    raise RuntimeError(
+                        f"Sending a {method} request to {route} timed out"
+                    )
 
                 resp.raise_for_status()
                 assert False, "This code path must be unreachable"
