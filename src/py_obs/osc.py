@@ -318,8 +318,13 @@ class Osc:
                     except asyncio.TimeoutError:
                         pass
 
+                    # don't wait after the last try
+                    if i == backoff.retries - 1:
+                        break
+
                     await asyncio.sleep(sleep_time)
                     sleep_time *= backoff.increase_factor
+
                 if resp is None:
                     raise RuntimeError(
                         f"Sending a {method} request to {route} timed out"
