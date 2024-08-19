@@ -1,10 +1,14 @@
+import asyncio
 from datetime import datetime, timedelta
 from pathlib import Path
 import os.path
 
+from aiohttp import ClientResponse
+import aiohttp
 import pytest
 
-from py_obs.osc import Osc
+from py_obs.osc import BackOff, Osc
+from tests.conftest import LOCAL_OSC_T
 
 
 def write_oscrc(tmp_path: Path, oscrc_contents: str, monkeypatch) -> None:
@@ -143,12 +147,59 @@ async def test_backoff() -> None:
 
     """
     before = datetime.now()
-    resp = await Osc("foo", password="irrelevant").api_request("/test")
+    resp = await Osc("foo", password="irrelevant").api_request(
+        "/test", backoff=BackOff(initial_sleep_time=0.5, increase_factor=1.0)
+    )
     after = datetime.now()
 
-    # we have 4 errors, i.e. we wait for at least (1 + 2 + 4 + 8)s = 15
-    assert after - before >= timedelta(seconds=15)
+    # we have 4 errors, i.e. we wait for at least (4 * 0.5)s = 2.0s
+    assert after - before >= timedelta(seconds=2)
 
     # final message is a 200
     assert resp.status == 200
     assert (await resp.text()) == "Success"
+
+
+@pytest.mark.asyncio
+async def test_timeout(local_osc: LOCAL_OSC_T, monkeypatch: pytest.MonkeyPatch) -> None:
+    async for osc, _ in local_osc:
+        about = await osc.api_request("/about")
+
+        global counter
+        counter = 0
+
+        async def timeout_request(*args, **kwargs) -> ClientResponse:
+            global counter
+            if counter == 0:
+                counter += 1
+                raise asyncio.TimeoutError("failed")
+            return about
+
+        monkeypatch.setattr(aiohttp.ClientSession, "request", timeout_request)
+
+        assert about == await osc.api_request("/about")
+        assert counter == 1
+
+
+@pytest.mark.asyncio
+async def test_timeout_no_recovery(
+    local_osc: LOCAL_OSC_T, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    async for osc, _ in local_osc:
+        global calls
+        calls = 0
+
+        async def timeout_request(*args, **kwargs) -> ClientResponse:
+            global calls
+            calls += 1
+            raise asyncio.TimeoutError("failed")
+
+        monkeypatch.setattr(aiohttp.ClientSession, "request", timeout_request)
+
+        with pytest.raises(RuntimeError) as runtime_err_ctx:
+            await osc.api_request(
+                "/about", backoff=BackOff(retries=2, initial_sleep_time=0)
+            )
+
+        assert "Sending a GET request to /about timed out" in str(runtime_err_ctx.value)
+        assert calls == 2
