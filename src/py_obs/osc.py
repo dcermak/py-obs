@@ -153,6 +153,20 @@ class CookieJar(http.cookiejar.LWPCookieJar):
 _DEFAULT_API_URL = "https://api.opensuse.org/"
 
 
+@dataclasses.dataclass(frozen=True)
+class BackOff:
+    """Settings for the exponential backoff in :py:func:`Osc.api_request`."""
+
+    #: total number of retries before giving up
+    retries: int = 5
+
+    #: initial sleep time in seconds after the first failure
+    initial_sleep_time: float = 1.0
+
+    #: exponential growth factor between consecutive failures
+    increase_factor: float = 2.0
+
+
 @dataclasses.dataclass
 class Osc:
     username: str = ""
@@ -239,6 +253,7 @@ class Osc:
         payload: bytes | str | None = None,
         params: typing.Mapping[str, str | list[str]] | None = None,
         method: typing.Literal["GET", "POST", "PUT", "DELETE"] = "GET",
+        backoff: BackOff | None = None,
     ) -> aiohttp.ClientResponse:
         """Perform a API request against the configured build service instance
         using the supplied route.
@@ -248,7 +263,8 @@ class Osc:
 
         - retry requests that receive an error 500, 502, 503 or 504 with an
           exponentially increasing wait time in between (the status codes
-          defined in :py:attr:`~Osc._RETRY_STATUSES`)
+          defined in :py:attr:`~Osc._RETRY_STATUSES`) using the supplied
+          `backoff` parameter for the exponential backoff
 
         - authenticate with the IBS ssh auth
 
@@ -271,33 +287,48 @@ class Osc:
             self._cookie_jar is not None
         ), "_cookie_jar must have been created in __post_init__"
 
+        backoff = backoff or BackOff()
+
         async with aiohttp.ClientSession(
             raise_for_status=True,
             base_url=self.api_url,
             headers=self._default_headers,
             cookie_jar=typing.cast(AbstractCookieJar, self._cookie_jar),
         ) as session:
-
             headers = list(self._default_headers.items())
             for cookie in session.cookie_jar.filter_cookies(URL(self.api_url)):
                 headers.append(cookie)  # type: ignore[arg-type]
 
             try:
-                sleep_time = 1
-                for _ in range(5):
-                    resp = await session.request(
-                        method=method,
-                        params=params,
-                        url=route,
-                        data=payload,
-                        headers=headers,
-                        auth=self._auth,
-                    )
-                    if resp.status not in Osc._RETRY_STATUSES:
-                        return resp
+                sleep_time = backoff.initial_sleep_time
+                resp: None | aiohttp.ClientResponse = None
+
+                for i in range(backoff.retries):
+                    try:
+                        resp = await session.request(
+                            method=method,
+                            params=params,
+                            url=route,
+                            data=payload,
+                            headers=headers,
+                            auth=self._auth,
+                        )
+                        if resp.status not in Osc._RETRY_STATUSES:
+                            return resp
+                    except asyncio.TimeoutError:
+                        pass
+
+                    # don't wait after the last try
+                    if i == backoff.retries - 1:
+                        break
 
                     await asyncio.sleep(sleep_time)
-                    sleep_time *= 2
+                    sleep_time *= backoff.increase_factor
+
+                if resp is None:
+                    raise RuntimeError(
+                        f"Sending a {method} request to {route} timed out"
+                    )
 
                 resp.raise_for_status()
                 assert False, "This code path must be unreachable"
