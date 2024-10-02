@@ -1,0 +1,156 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: GET
+    uri: /source/openSUSE.org:devel:BCI:SLE-15-SP6
+  response:
+    body:
+      string: "<directory>\n  <entry name=\"389-ds-container\"/>\n  <entry name=\"alertmanager-image\"/>\n
+        \ <entry name=\"aspnet-runtime-6.0\"/>\n  <entry name=\"aspnet-runtime-8.0\"/>\n
+        \ <entry name=\"base-fips-image\"/>\n  <entry name=\"blackbox_exporter-image\"/>\n
+        \ <entry name=\"busybox-image\"/>\n  <entry name=\"distribution-image\"/>\n
+        \ <entry name=\"dotnet-6.0\"/>\n  <entry name=\"dotnet-8.0\"/>\n  <entry name=\"dotnet-runtime-6.0\"/>\n
+        \ <entry name=\"dotnet-runtime-8.0\"/>\n  <entry name=\"gcc-13-image\"/>\n
+        \ <entry name=\"gcc-7-image\"/>\n  <entry name=\"git-image\"/>\n  <entry name=\"golang-oldstable-image\"/>\n
+        \ <entry name=\"golang-oldstable-openssl-image\"/>\n  <entry name=\"golang-stable-image\"/>\n
+        \ <entry name=\"golang-stable-openssl-image\"/>\n  <entry name=\"grafana-image\"/>\n
+        \ <entry name=\"helm-image\"/>\n  <entry name=\"init-image\"/>\n  <entry name=\"kiwi-image\"/>\n
+        \ <entry name=\"micro-image\"/>\n  <entry name=\"minimal-image\"/>\n  <entry
+        name=\"nginx-image\"/>\n  <entry name=\"nodejs-20-image\"/>\n  <entry name=\"openjdk-21-devel-image\"/>\n
+        \ <entry name=\"openjdk-21-image\"/>\n  <entry name=\"pcp-image\"/>\n  <entry
+        name=\"php-apache8-image\"/>\n  <entry name=\"php-fpm8-image\"/>\n  <entry
+        name=\"php8-image\"/>\n  <entry name=\"postgres-16-image\"/>\n  <entry name=\"prometheus-image\"/>\n
+        \ <entry name=\"python-3.11-image\"/>\n  <entry name=\"python-3.12-image\"/>\n
+        \ <entry name=\"python-3.6-image\"/>\n  <entry name=\"rmt-mariadb-client-image\"/>\n
+        \ <entry name=\"rmt-mariadb-image\"/>\n  <entry name=\"rmt-nginx-image\"/>\n
+        \ <entry name=\"rmt-server-image\"/>\n  <entry name=\"ruby-2.5-image\"/>\n
+        \ <entry name=\"rust-oldstable-image\"/>\n  <entry name=\"rust-stable-image\"/>\n
+        \ <entry name=\"sac-apache-tomcat-10-image\"/>\n  <entry name=\"sac-apache-tomcat-10-image:openjdk17\"
+        originpackage=\"sac-apache-tomcat-10-image\"/>\n  <entry name=\"sac-apache-tomcat-10-image:openjdk21\"
+        originpackage=\"sac-apache-tomcat-10-image\"/>\n  <entry name=\"sac-postfix-image\"/>\n
+        \ <entry name=\"sle15-kernel-module-devel-image\"/>\n  <entry name=\"sles15-image\"/>\n
+        \ <entry name=\"spack-image\"/>\n</directory>\n"
+    headers:
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Origin:
+      - https://build.suse.de
+      Cache-Control:
+      - private, no-transform
+      - no-cache
+      Content-Length:
+      - '1980'
+      Content-Type:
+      - text/xml
+      Date:
+      - Wed, 02 Oct 2024 14:03:32 GMT
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Strict-Transport-Security:
+      - max-age=31536000
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20241001T130929.5f9bc8468
+      x-opensuse-runtimes:
+      - '{"view":null,"db":5.313116073608398,"backend":0}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R) 6.0.20
+      x-request-id:
+      - 51d80830-efec-4e86-bca5-dfd99ab8af5e
+      x-runtime:
+      - '0.034358'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: GET
+    uri: /source/openSUSE.org:devel:BCI:SLE-15-SP6
+  response:
+    body:
+      string: "<directory>\n  <entry name=\"389-ds-container\"/>\n  <entry name=\"alertmanager-image\"/>\n
+        \ <entry name=\"aspnet-runtime-6.0\"/>\n  <entry name=\"aspnet-runtime-8.0\"/>\n
+        \ <entry name=\"base-fips-image\"/>\n  <entry name=\"blackbox_exporter-image\"/>\n
+        \ <entry name=\"busybox-image\"/>\n  <entry name=\"distribution-image\"/>\n
+        \ <entry name=\"dotnet-6.0\"/>\n  <entry name=\"dotnet-8.0\"/>\n  <entry name=\"dotnet-runtime-6.0\"/>\n
+        \ <entry name=\"dotnet-runtime-8.0\"/>\n  <entry name=\"gcc-13-image\"/>\n
+        \ <entry name=\"gcc-7-image\"/>\n  <entry name=\"git-image\"/>\n  <entry name=\"golang-oldstable-image\"/>\n
+        \ <entry name=\"golang-oldstable-openssl-image\"/>\n  <entry name=\"golang-stable-image\"/>\n
+        \ <entry name=\"golang-stable-openssl-image\"/>\n  <entry name=\"grafana-image\"/>\n
+        \ <entry name=\"helm-image\"/>\n  <entry name=\"init-image\"/>\n  <entry name=\"kiwi-image\"/>\n
+        \ <entry name=\"micro-image\"/>\n  <entry name=\"minimal-image\"/>\n  <entry
+        name=\"nginx-image\"/>\n  <entry name=\"nodejs-20-image\"/>\n  <entry name=\"openjdk-21-devel-image\"/>\n
+        \ <entry name=\"openjdk-21-image\"/>\n  <entry name=\"pcp-image\"/>\n  <entry
+        name=\"php-apache8-image\"/>\n  <entry name=\"php-fpm8-image\"/>\n  <entry
+        name=\"php8-image\"/>\n  <entry name=\"postgres-16-image\"/>\n  <entry name=\"prometheus-image\"/>\n
+        \ <entry name=\"python-3.11-image\"/>\n  <entry name=\"python-3.12-image\"/>\n
+        \ <entry name=\"python-3.6-image\"/>\n  <entry name=\"rmt-mariadb-client-image\"/>\n
+        \ <entry name=\"rmt-mariadb-image\"/>\n  <entry name=\"rmt-nginx-image\"/>\n
+        \ <entry name=\"rmt-server-image\"/>\n  <entry name=\"ruby-2.5-image\"/>\n
+        \ <entry name=\"rust-oldstable-image\"/>\n  <entry name=\"rust-stable-image\"/>\n
+        \ <entry name=\"sac-apache-tomcat-10-image\"/>\n  <entry name=\"sac-apache-tomcat-10-image:openjdk17\"
+        originpackage=\"sac-apache-tomcat-10-image\"/>\n  <entry name=\"sac-apache-tomcat-10-image:openjdk21\"
+        originpackage=\"sac-apache-tomcat-10-image\"/>\n  <entry name=\"sac-postfix-image\"/>\n
+        \ <entry name=\"sle15-kernel-module-devel-image\"/>\n  <entry name=\"sles15-image\"/>\n
+        \ <entry name=\"spack-image\"/>\n</directory>\n"
+    headers:
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Origin:
+      - https://build.suse.de
+      Cache-Control:
+      - private, no-transform
+      - no-cache
+      Content-Length:
+      - '1980'
+      Content-Type:
+      - text/xml
+      Date:
+      - Wed, 02 Oct 2024 14:03:33 GMT
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Strict-Transport-Security:
+      - max-age=31536000
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20241001T130929.5f9bc8468
+      x-opensuse-runtimes:
+      - '{"view":null,"db":4.805569887161255,"backend":0}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R) 6.0.20
+      x-request-id:
+      - bd384d0b-2b93-4239-aa87-020b18a0cf81
+      x-runtime:
+      - '0.016394'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+version: 1

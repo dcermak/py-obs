@@ -289,6 +289,7 @@ class _Directory(MetaMixin):
         size: int | None
         mtime: int | None
         originproject: str | None
+        originpackage: str | None
         available: bool | None
         recommended: bool | None
         hash: str | None
@@ -334,10 +335,17 @@ def _prj_and_pkg_name(prj: str | Project, pkg: Package | str) -> tuple[str, str]
     )
 
 
-async def fetch_package_list(osc: Osc, project: Project | str) -> list[str]:
-    """Retrieve the list of packages in the supplied project"""
-    return [
-        entry.name
+async def fetch_package_list(
+    osc: Osc, project: Project | str, *, exclude_multibuild_flavors: bool = True
+) -> list[str]:
+    """Retrieve the list of packages in the supplied project.
+
+    If exclude_multibuild_flavors is ``True``, then flavors of multibuild
+    packages are not shown and only the main package names are displayed.
+
+    """
+    dentries = [
+        entry
         for entry in (
             await _Directory.from_response(
                 await osc.api_request(
@@ -345,8 +353,19 @@ async def fetch_package_list(osc: Osc, project: Project | str) -> list[str]:
                 )
             )
         ).entry
-        if entry.name
     ]
+
+    if not exclude_multibuild_flavors:
+        return [d.name for d in dentries if d.name]
+
+    res = []
+    for dentry in dentries:
+        if dentry.name:
+            if ":" in dentry.name and dentry.originpackage:
+                res.append(dentry.originpackage)
+            else:
+                res.append(dentry.name.partition(":")[0])
+    return list(set(res))
 
 
 @dataclass(frozen=True)

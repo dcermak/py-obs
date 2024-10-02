@@ -24,9 +24,14 @@ def local_obs_apiurl() -> str:
 
 @pytest.fixture(scope="session")
 async def osc_from_env() -> OSC_FROM_ENV_T:
+    ssh_key_path = os.getenv("OSC_SSH_PUBKEY")
     yield Osc(
         username=osc_test_user_name(),
-        password=os.getenv("OSC_PASSWORD", "surely-invalid"),
+        password=os.getenv(
+            "OSC_PASSWORD", "surely-invalid" if not ssh_key_path else ""
+        ),
+        api_url=local_obs_apiurl(),
+        ssh_key_path=ssh_key_path,
     )
 
 
