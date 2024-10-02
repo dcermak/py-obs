@@ -13,7 +13,7 @@ from py_obs.project import (
     send_meta,
 )
 from py_obs.xml_factory import StrElementField
-from tests.conftest import HOME_PROJ_T
+from tests.conftest import HOME_PROJ_T, OSC_FROM_ENV_T
 
 
 @pytest.mark.parametrize(
@@ -82,3 +82,25 @@ async def test_fetch_package_list(home_project: HOME_PROJ_T):
             and pkg.name in new_pkg_list
             and len(new_pkg_list) == 2
         )
+
+
+@pytest.mark.vcr(filter_headers=["authorization", "openSUSE_session"])
+@pytest.mark.asyncio
+async def test_package_list_excludes_multibuild(osc_from_env: OSC_FROM_ENV_T) -> None:
+    async for osc in osc_from_env:
+        pkg_list = await fetch_package_list(osc, "openSUSE.org:devel:BCI:SLE-15-SP6")
+        assert "sac-apache-tomcat-10-image" in pkg_list
+
+        assert (
+            len(
+                [pkg_with_colon for pkg_with_colon in pkg_list if ":" in pkg_with_colon]
+            )
+            == 0
+        )
+
+        pkg_list_with_multibuild = await fetch_package_list(
+            osc, "openSUSE.org:devel:BCI:SLE-15-SP6", exclude_multibuild_flavors=False
+        )
+        assert len(pkg_list) < len(pkg_list_with_multibuild)
+        assert "sac-apache-tomcat-10-image" in pkg_list_with_multibuild
+        assert "sac-apache-tomcat-10-image:openjdk17" in pkg_list_with_multibuild
