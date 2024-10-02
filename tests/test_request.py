@@ -372,6 +372,7 @@ async def test_request_with_revision(home_project: HOME_PROJ_T) -> None:
             osc,
             source_prj=prj.name,
             pkg=pkg.name,
+            description="This is just a test",
             dest_prj="openSUSE:Factory",
             revision=PackageRevision.LATEST,
         )
