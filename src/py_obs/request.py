@@ -173,7 +173,7 @@ class Request(MetaMixin):
     creator: str | None
 
     #: Optional description of this request
-    description: str | None = None
+    description: list[str] | None = None
 
     #: Set of actions that will be performed once the request is accepted
     action: list[RequestAction] = field(default_factory=list)
@@ -373,7 +373,7 @@ async def submit_package(
     rq = Request(
         id=None,
         creator=osc.username,
-        description=description,
+        description=[description] if description else None,
         action=[
             RequestAction(
                 type=ACTION,
