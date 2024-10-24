@@ -63,7 +63,7 @@ class MetaMixin(ABC):
     #    xml_element: ET.Element) -> typing.Any:
 
     def field_transformer(
-        self, field: dataclasses.Field[typing.Any]
+        self, field: dataclasses.Field[T]
     ) -> tuple[T, str, typing.Type[T]]:
         """Override this method if you wish for certain fields to use a
         different value or type or xml tag.
@@ -76,7 +76,9 @@ class MetaMixin(ABC):
             A tuple of the field's value, name and type.
 
         """
-        return (getattr(self, field.name), field.name, field.type)
+        tp = typing.cast(typing.Type[T], field.type)
+        value = typing.cast(T, getattr(self, field.name))
+        return value, field.name, tp
 
     @property
     def meta(self) -> ET.Element:
