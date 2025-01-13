@@ -2,6 +2,7 @@ from dataclasses import dataclass
 import os
 from typing import AsyncGenerator, Self
 import pytest
+import pytest_asyncio
 
 from py_obs.osc import ObsException, Osc
 from py_obs.person import Person
@@ -9,9 +10,8 @@ import py_obs.project as project
 from py_obs.xml_factory import StrElementField
 
 
-LOCAL_OSC_T = AsyncGenerator[tuple[Osc, Osc], None]
-
-OSC_FROM_ENV_T = AsyncGenerator[Osc, None]
+LOCAL_OSC_T = tuple[Osc, Osc]
+OSC_FROM_ENV_T = Osc
 
 
 def osc_test_user_name() -> str:
@@ -22,8 +22,8 @@ def local_obs_apiurl() -> str:
     return os.getenv("OBS_URL", "http://localhost:3000")
 
 
-@pytest.fixture(scope="session")
-async def osc_from_env() -> OSC_FROM_ENV_T:
+@pytest_asyncio.fixture(scope="session", loop_scope="session")
+async def osc_from_env() -> AsyncGenerator[OSC_FROM_ENV_T, None]:
     ssh_key_path = os.getenv("OSC_SSH_PUBKEY")
     yield Osc(
         username=osc_test_user_name(),
@@ -35,8 +35,10 @@ async def osc_from_env() -> OSC_FROM_ENV_T:
     )
 
 
-@pytest.fixture(scope="function")
-async def local_osc(request: pytest.FixtureRequest) -> LOCAL_OSC_T:
+@pytest_asyncio.fixture(scope="function", loop_scope="function")
+async def local_osc(
+    request: pytest.FixtureRequest,
+) -> AsyncGenerator[LOCAL_OSC_T, None]:
     request.applymarker(pytest.mark.local_obs)
     local = Osc(
         username=osc_test_user_name(),
@@ -47,26 +49,26 @@ async def local_osc(request: pytest.FixtureRequest) -> LOCAL_OSC_T:
     yield (local, admin)
 
 
-HOME_PROJ_T = AsyncGenerator[tuple[Osc, Osc, project.Project, project.Package], None]
+HOME_PROJ_T = tuple[Osc, Osc, project.Project, project.Package]
 
 
-@pytest.fixture(scope="function")
-async def home_project(local_osc: LOCAL_OSC_T) -> HOME_PROJ_T:
-    async for osc, admin in local_osc:
-        prj = project.Project(
-            name=f"home:{osc.username}",
-            title=StrElementField("my home project"),
-            person=[Person(userid=osc.username)],
-        )
-        pkg = project.Package(name="emacs", title=StrElementField("The Emacs package"))
+@pytest_asyncio.fixture(scope="function", loop_scope="function")
+async def home_project(local_osc: LOCAL_OSC_T) -> AsyncGenerator[HOME_PROJ_T, None]:
+    osc, admin = local_osc
+    prj = project.Project(
+        name=f"home:{osc.username}",
+        title=StrElementField("my home project"),
+        person=[Person(userid=osc.username)],
+    )
+    pkg = project.Package(name="emacs", title=StrElementField("The Emacs package"))
 
-        # try to delete the home project in case it is left over from previous
-        # unsuccessful test runs
-        async with ProjectCleaner(osc, prj) as _:
-            await project.send_meta(osc, prj=prj)
-            await project.send_meta(osc, prj=prj, pkg=pkg)
+    # try to delete the home project in case it is left over from previous
+    # unsuccessful test runs
+    async with ProjectCleaner(osc, prj) as _:
+        await project.send_meta(osc, prj=prj)
+        await project.send_meta(osc, prj=prj, pkg=pkg)
 
-            yield osc, admin, prj, pkg
+        yield osc, admin, prj, pkg
 
 
 @dataclass(frozen=True)
