@@ -162,44 +162,45 @@ async def test_backoff() -> None:
 
 @pytest.mark.asyncio
 async def test_timeout(local_osc: LOCAL_OSC_T, monkeypatch: pytest.MonkeyPatch) -> None:
-    async for osc, _ in local_osc:
-        about = await osc.api_request("/about")
+    osc, _ = local_osc
+    about = await osc.api_request("/about")
 
+    global counter
+    counter = 0
+
+    async def timeout_request(*args, **kwargs) -> ClientResponse:
         global counter
-        counter = 0
+        if counter == 0:
+            counter += 1
+            raise asyncio.TimeoutError("failed")
+        return about
 
-        async def timeout_request(*args, **kwargs) -> ClientResponse:
-            global counter
-            if counter == 0:
-                counter += 1
-                raise asyncio.TimeoutError("failed")
-            return about
+    monkeypatch.setattr(aiohttp.ClientSession, "request", timeout_request)
 
-        monkeypatch.setattr(aiohttp.ClientSession, "request", timeout_request)
-
-        assert about == await osc.api_request("/about")
-        assert counter == 1
+    assert about == await osc.api_request("/about")
+    assert counter == 1
 
 
 @pytest.mark.asyncio
 async def test_timeout_no_recovery(
     local_osc: LOCAL_OSC_T, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    async for osc, _ in local_osc:
+    osc, _ = local_osc
+
+    global calls
+    calls = 0
+
+    async def timeout_request(*args, **kwargs) -> ClientResponse:
         global calls
-        calls = 0
+        calls += 1
+        raise asyncio.TimeoutError("failed")
 
-        async def timeout_request(*args, **kwargs) -> ClientResponse:
-            global calls
-            calls += 1
-            raise asyncio.TimeoutError("failed")
+    monkeypatch.setattr(aiohttp.ClientSession, "request", timeout_request)
 
-        monkeypatch.setattr(aiohttp.ClientSession, "request", timeout_request)
+    with pytest.raises(RuntimeError) as runtime_err_ctx:
+        await osc.api_request(
+            "/about", backoff=BackOff(retries=2, initial_sleep_time=0)
+        )
 
-        with pytest.raises(RuntimeError) as runtime_err_ctx:
-            await osc.api_request(
-                "/about", backoff=BackOff(retries=2, initial_sleep_time=0)
-            )
-
-        assert "Sending a GET request to /about timed out" in str(runtime_err_ctx.value)
-        assert calls == 2
+    assert "Sending a GET request to /about timed out" in str(runtime_err_ctx.value)
+    assert calls == 2
