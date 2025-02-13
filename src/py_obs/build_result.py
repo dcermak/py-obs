@@ -64,17 +64,39 @@ class BuildResultList(MetaMixin):
 
 
 async def fetch_build_result(
-    osc: Osc, project_name: str, package_name: str
+    osc: Osc,
+    project_name: str,
+    package_name: str,
+    *,
+    lastbuild: bool = False,
+    multibuild: bool = True,
+    locallink: bool = True,
 ) -> list[BuildResult]:
+    """Fetches the build results of a package.
+
+    Parameters:
+    -----------
+
+    - locallink: set to ``True`` to include build results from packages with
+      project local links.
+
+    - lastbuild: Set to ``True`` to show the last build result (excludes current
+      building job states).
+
+    - multibuild: Set to ``True`` to include build results from
+      :file:`_multibuild` definitions
+
+    """
     return (
         await BuildResultList.from_response(
             await osc.api_request(
                 f"/build/{project_name}/_result",
                 params={
                     "view": "status",
-                    "multibuild": "1",
-                    "locallink": "1",
+                    "multibuild": str(int(multibuild)),
+                    "locallink": str(int(locallink)),
                     "package": package_name,
+                    "lastbuild": str(int(lastbuild)),
                 },
             )
         )
