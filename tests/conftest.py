@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 import os
 from typing import AsyncGenerator, Self
+from urllib.parse import urlparse
 import pytest
 import pytest_asyncio
 
@@ -14,12 +15,20 @@ LOCAL_OSC_T = tuple[Osc, Osc]
 OSC_FROM_ENV_T = Osc
 
 
+@pytest.fixture(scope="module")
+def vcr_config():
+    return {"filter_headers": ["authorization", "openSUSE_session"]}
+
+
 def osc_test_user_name() -> str:
     return os.getenv("OSC_USER", "obsTestUser")
 
 
 def local_obs_apiurl() -> str:
-    return os.getenv("OBS_URL", "http://localhost:3000")
+    url = os.getenv("OBS_URL", "http://localhost:3000")
+    if (u := urlparse(url)).hostname != "localhost" and u.scheme != "https":
+        raise ValueError("Cannot use non HTTPS on non localhost")
+    return url
 
 
 @pytest_asyncio.fixture(scope="session", loop_scope="session")

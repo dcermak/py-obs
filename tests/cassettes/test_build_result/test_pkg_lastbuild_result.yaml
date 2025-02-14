@@ -1,0 +1,56 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: GET
+    uri: /build/openSUSE:Factory/_result?view=status&multibuild=1&locallink=1&lastbuild=1&repository=standard&package=update-test-trivial
+  response:
+    body:
+      string: "<resultlist state=\"6e4df71d0e4a13caa095ea7221b5ef0b\">\n  <result
+        project=\"openSUSE:Factory\" repository=\"standard\" arch=\"x86_64\" code=\"building\"
+        state=\"building\">\n    <status package=\"update-test-trivial\" code=\"succeeded\"/>\n
+        \ </result>\n  <result project=\"openSUSE:Factory\" repository=\"standard\"
+        arch=\"i586\" code=\"published\" state=\"published\">\n    <status package=\"update-test-trivial\"
+        code=\"unknown\"/>\n  </result>\n</resultlist>\n"
+    headers:
+      Cache-Control:
+      - private, no-transform
+      - no-cache
+      Content-Length:
+      - '426'
+      Content-Type:
+      - text/xml
+      Date:
+      - Fri, 14 Feb 2025 11:23:52 GMT
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Strict-Transport-Security:
+      - max-age=31536000
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250212T121804.5a0aee8a4
+      x-opensuse-runtimes:
+      - '{"view":null,"db":4.076802015304565,"backend":0}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - 9360f4ea-e9df-4bdc-b587-e056888d03f7
+      x-runtime:
+      - '0.014552'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+version: 1
