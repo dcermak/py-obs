@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 import os
 from typing import AsyncGenerator, Self
+from urllib.parse import urlparse
 import pytest
 import pytest_asyncio
 
@@ -19,7 +20,10 @@ def osc_test_user_name() -> str:
 
 
 def local_obs_apiurl() -> str:
-    return os.getenv("OBS_URL", "http://localhost:3000")
+    url = os.getenv("OBS_URL", "http://localhost:3000")
+    if (u := urlparse(url)).hostname != "localhost" and u.scheme != "https":
+        raise ValueError("Cannot use non HTTPS on non localhost")
+    return url
 
 
 @pytest_asyncio.fixture(scope="session", loop_scope="session")
