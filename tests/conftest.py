@@ -15,6 +15,11 @@ LOCAL_OSC_T = tuple[Osc, Osc]
 OSC_FROM_ENV_T = Osc
 
 
+@pytest.fixture(scope="module")
+def vcr_config():
+    return {"filter_headers": ["authorization", "openSUSE_session"]}
+
+
 def osc_test_user_name() -> str:
     return os.getenv("OSC_USER", "obsTestUser")
 
