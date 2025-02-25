@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "py-obs"
-version = "0.0.1"
+version = "0.0.2"
 description = "Asynchronous API wrapper for the Open Build Service"
 authors = ["Dan Čermák <dcermak@suse.com>"]
 license = "GPL-2.0-or-later"
