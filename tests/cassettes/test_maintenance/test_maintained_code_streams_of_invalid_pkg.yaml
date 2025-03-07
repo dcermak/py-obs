@@ -1,0 +1,175 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: POST
+    uri: /source?cmd=branch&attribute=OBS:Maintained&package=buildah&update_project_attribute=OBS:UpdateProject&dryrun=1
+  response:
+    body:
+      string: "<collection>\n  <package project=\"SUSE:SLE-15-SP5:Update\" package=\"buildah\">\n
+        \   <target project=\"home:dancermak:branches:OBS_Maintained:buildah\" package=\"buildah.SUSE:SLE-15-SP5:Update\"/>\n
+        \ </package>\n</collection>\n"
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - text/plain; charset=utf-8
+      Date:
+      - Fri, 07 Mar 2025 16:33:24 GMT
+      Etag:
+      - W/"7b2e048b09a46edeaa6f5e8de9acd651"
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept,Accept-Encoding
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      status:
+      - 200 OK
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250305T092451.3e1fb88a2
+      x-opensuse-runtimes:
+      - '{"view":0.5152790108695626,"db":1279.5752394199371,"backend":10.155176}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - b3ee4f54-e9af-474a-9c40-0d51ba653478
+      x-runtime:
+      - '1.385880'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: POST
+    uri: /source?cmd=branch&attribute=OBS:Maintained&package=buildah&update_project_attribute=OBS:UpdateProject&dryrun=1
+  response:
+    body:
+      string: "<collection>\n  <package project=\"SUSE:SLE-15-SP5:Update\" package=\"buildah\">\n
+        \   <target project=\"home:dancermak:branches:OBS_Maintained:buildah\" package=\"buildah.SUSE:SLE-15-SP5:Update\"/>\n
+        \ </package>\n</collection>\n"
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - text/plain; charset=utf-8
+      Date:
+      - Fri, 07 Mar 2025 16:50:52 GMT
+      Etag:
+      - W/"eb353706725b125bb4dc81581c63768a"
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept,Accept-Encoding
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      status:
+      - 200 OK
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250305T092451.3e1fb88a2
+      x-opensuse-runtimes:
+      - '{"view":1.7613180680200458,"db":1311.2450182437897,"backend":8.886615}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - 45d2fd3d-0a5c-4dbb-b885-b3341974d8f0
+      x-runtime:
+      - '1.431067'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: POST
+    uri: /source?cmd=branch&attribute=OBS:Maintained&package=asdf&update_project_attribute=OBS:UpdateProject&dryrun=1
+  response:
+    body:
+      string: "<status code=\"not_found\">\n  <summary>no packages found by search
+        criteria</summary>\n</status>\n"
+    headers:
+      Cache-Control:
+      - no-cache
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 07 Mar 2025 16:51:22 GMT
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept,Accept-Encoding
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      status:
+      - 404 Not Found
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250305T092451.3e1fb88a2
+      x-opensuse-errorcode:
+      - not_found
+      x-opensuse-runtimes:
+      - '{"view":0.8620519656687975,"db":1354.6828932762146,"backend":0}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - fc5f1bab-4702-4df6-a722-ed8a80e41ab0
+      x-runtime:
+      - '1.554258'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 404
+      message: Not Found
+version: 1

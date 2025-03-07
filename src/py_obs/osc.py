@@ -254,6 +254,7 @@ class Osc:
         params: typing.Mapping[str, str | list[str]] | None = None,
         method: typing.Literal["GET", "POST", "PUT", "DELETE"] = "GET",
         backoff: BackOff | None = None,
+        raise_for_status: bool = True,
     ) -> aiohttp.ClientResponse:
         """Perform a API request against the configured build service instance
         using the supplied route.
@@ -283,14 +284,14 @@ class Osc:
             payload,
         )
 
-        assert (
-            self._cookie_jar is not None
-        ), "_cookie_jar must have been created in __post_init__"
+        assert self._cookie_jar is not None, (
+            "_cookie_jar must have been created in __post_init__"
+        )
 
         backoff = backoff or BackOff()
 
         async with aiohttp.ClientSession(
-            raise_for_status=True,
+            raise_for_status=raise_for_status,
             base_url=self.api_url,
             headers=self._default_headers,
             cookie_jar=typing.cast(AbstractCookieJar, self._cookie_jar),

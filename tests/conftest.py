@@ -4,6 +4,8 @@ from typing import AsyncGenerator, Self
 from urllib.parse import urlparse
 import pytest
 import pytest_asyncio
+from vcr import VCR
+from vcr.record_mode import RecordMode
 
 from py_obs.osc import ObsException, Osc
 from py_obs.person import Person
@@ -80,10 +82,14 @@ async def home_project(local_osc: LOCAL_OSC_T) -> AsyncGenerator[HOME_PROJ_T, No
         yield osc, admin, prj, pkg
 
 
-@dataclass(frozen=True)
+@dataclass
 class ProjectCleaner:
     """Context manager for ensuring that a specified project does not exist
     after entering and after exiting the context manager.
+
+    You can optionally specify a ``VCR`` instance from the ``vcr`` fixture. This
+    class will then perform no requests if vcr is not recording. This prevents
+    weird glitches when matching DELETE requests against recorded ones.
 
     """
 
@@ -91,16 +97,26 @@ class ProjectCleaner:
 
     project: project.Project | str
 
+    _vcr: VCR | None = None
+
+    _recording: bool = True
+
+    def __post_init__(self) -> None:
+        if self._vcr is not None:
+            self._recording = self._vcr.record_mode != RecordMode.NONE
+
     async def __aenter__(self) -> Self:
-        try:
-            await project.delete(self.osc, prj=self.project, force=True)
-        except ObsException:
-            pass
+        if self._recording:
+            try:
+                await project.delete(self.osc, prj=self.project, force=True)
+            except ObsException:
+                pass
 
         return self
 
     async def __aexit__(self, exc_type, exc, tb) -> None:
-        try:
-            await project.delete(self.osc, prj=self.project, force=True)
-        except ObsException:
-            pass
+        if self._recording:
+            try:
+                await project.delete(self.osc, prj=self.project, force=True)
+            except ObsException:
+                pass
