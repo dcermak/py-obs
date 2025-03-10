@@ -54,13 +54,7 @@ async def mbranch(osc: Osc, pkg: Package | str) -> str:
 
     Returns:
 
-    A sequence of tuples where the first name of the tuple is the project name
-    and the second the package name.
-
-    .. Note:
-
-       Generally OBS mbranches all packages into the **same** project, but we
-       cannot rely on that unfortunately.
+    The name of the project into which the package has been branched
 
     """
     resp = await _mbranch(osc, pkg, raise_for_status=False, dry_run=False)
