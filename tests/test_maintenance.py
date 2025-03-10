@@ -66,5 +66,10 @@ async def test_double_mbranch(osc_from_env: OSC_FROM_ENV_T, vcr: VCR) -> None:
             await mbranch(osc_from_env, "gcc14")
 
         assert (
-            "branch target package already exists" in dbl_branch_exc_ctx.value.message
+            "branch target package already exists"
+            in (exc := dbl_branch_exc_ctx.value).message
+        )
+        assert (
+            exc.package == "gcc14.SUSE_SLE-15_Update"
+            and exc.project == gcc14_maintained_prj
         )

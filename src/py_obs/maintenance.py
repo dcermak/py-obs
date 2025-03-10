@@ -1,3 +1,4 @@
+import re
 from dataclasses import dataclass
 
 from aiohttp import ClientResponse
@@ -24,11 +25,27 @@ class _Collection(MetaMixin):
     package: list[_Package]
 
 
+_DOUBLE_BRANCH_RE = re.compile(r"(?P<proj>[^\s/]+)/(?P<pkg>[^\s/]+)$")
+
+
 class DoubleBranchException(ObsException):
     """Exception raised when a package is branched twice into the user's home
     project.
 
     """
+
+    def __init__(self, obs_status: Status, **kwargs) -> None:
+        if "message" not in kwargs and obs_status.summary:
+            kwargs["message"] = str(obs_status.summary)
+
+        super().__init__(**kwargs)
+
+        self.project, self.package = None, None
+        if obs_status.summary:
+            res = _DOUBLE_BRANCH_RE.search(obs_status.summary)
+            if res:
+                self.project = res.group("proj")
+                self.package = res.group("pkg")
 
 
 async def _mbranch(
@@ -73,10 +90,10 @@ async def mbranch(osc: Osc, pkg: Package | str) -> str:
             status = Status.from_xml(await resp.read())
             if status.code == "double_branch_package":
                 raise DoubleBranchException(
+                    obs_status=status,
                     request_info=resp.request_info,
                     history=resp.history,
                     status=resp.status,
-                    message=str(status.summary) if status.summary else "",
                 )
         except ValueError:
             # this was not a OBS status response or not a double branch
