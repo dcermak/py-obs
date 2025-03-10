@@ -1,0 +1,408 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: POST
+    uri: /source?cmd=branch&attribute=OBS:Maintained&package=podman&update_project_attribute=OBS:UpdateProject&dryrun=1
+  response:
+    body:
+      string: "<collection>\n  <package project=\"SUSE:SLE-15-SP5:Update\" package=\"podman\">\n
+        \   <target project=\"home:dancermak:branches:OBS_Maintained:podman\" package=\"podman.SUSE:SLE-15-SP5:Update\"/>\n
+        \ </package>\n</collection>\n"
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - text/plain; charset=utf-8
+      Date:
+      - Fri, 07 Mar 2025 16:21:23 GMT
+      Etag:
+      - W/"b87e760090b07347ea04b686565e4dae"
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept,Accept-Encoding
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      status:
+      - 200 OK
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250305T092451.3e1fb88a2
+      x-opensuse-runtimes:
+      - '{"view":0.9252839954569936,"db":1242.5841218233109,"backend":11.354137999999999}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - 7dcc62ba-a25f-4f05-ad03-074d71988843
+      x-runtime:
+      - '1.355358'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: POST
+    uri: /source?cmd=branch&attribute=OBS:Maintained&package=podman&update_project_attribute=OBS:UpdateProject&dryrun=1
+  response:
+    body:
+      string: "<collection>\n  <package project=\"SUSE:SLE-15-SP5:Update\" package=\"podman\">\n
+        \   <target project=\"home:dancermak:branches:OBS_Maintained:podman\" package=\"podman.SUSE:SLE-15-SP5:Update\"/>\n
+        \ </package>\n</collection>\n"
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - text/plain; charset=utf-8
+      Date:
+      - Fri, 07 Mar 2025 16:22:13 GMT
+      Etag:
+      - W/"63b351484d955aa220760cac2daef7e4"
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept,Accept-Encoding
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      status:
+      - 200 OK
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250305T092451.3e1fb88a2
+      x-opensuse-runtimes:
+      - '{"view":0.6109930109232664,"db":1240.9021183252335,"backend":8.521493}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - c97deb7c-7ee1-4a8b-8993-36cf3a4210eb
+      x-runtime:
+      - '1.332017'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: POST
+    uri: /source?cmd=branch&attribute=OBS:Maintained&package=podman&update_project_attribute=OBS:UpdateProject&dryrun=1
+  response:
+    body:
+      string: "<collection>\n  <package project=\"SUSE:SLE-15-SP5:Update\" package=\"podman\">\n
+        \   <target project=\"home:dancermak:branches:OBS_Maintained:podman\" package=\"podman.SUSE:SLE-15-SP5:Update\"/>\n
+        \ </package>\n</collection>\n"
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - text/plain; charset=utf-8
+      Date:
+      - Fri, 07 Mar 2025 16:23:16 GMT
+      Etag:
+      - W/"fa7bc5f9e5656e43faf6f84194df5900"
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept,Accept-Encoding
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      status:
+      - 200 OK
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250305T092451.3e1fb88a2
+      x-opensuse-runtimes:
+      - '{"view":1.5121250180527568,"db":1264.509150505066,"backend":7.4569149999999995}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - bb5eedf7-6413-486d-9989-63814984199a
+      x-runtime:
+      - '1.475328'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: POST
+    uri: /source?cmd=branch&attribute=OBS:Maintained&package=podman&update_project_attribute=OBS:UpdateProject&dryrun=1
+  response:
+    body:
+      string: "<collection>\n  <package project=\"SUSE:SLE-15-SP5:Update\" package=\"podman\">\n
+        \   <target project=\"home:dancermak:branches:OBS_Maintained:podman\" package=\"podman.SUSE:SLE-15-SP5:Update\"/>\n
+        \ </package>\n</collection>\n"
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - text/plain; charset=utf-8
+      Date:
+      - Fri, 07 Mar 2025 16:29:36 GMT
+      Etag:
+      - W/"c6bda3635275f1b7aafc6c5014e4db02"
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept,Accept-Encoding
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      status:
+      - 200 OK
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250305T092451.3e1fb88a2
+      x-opensuse-runtimes:
+      - '{"view":0.38680690340697765,"db":1278.5869184732437,"backend":9.368385}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - b7b11d71-e46a-4f82-a2f2-8451b2727fea
+      x-runtime:
+      - '1.368335'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: POST
+    uri: /source?cmd=branch&attribute=OBS:Maintained&package=podman&update_project_attribute=OBS:UpdateProject&dryrun=1
+  response:
+    body:
+      string: "<collection>\n  <package project=\"SUSE:SLE-15-SP5:Update\" package=\"podman\">\n
+        \   <target project=\"home:dancermak:branches:OBS_Maintained:podman\" package=\"podman.SUSE:SLE-15-SP5:Update\"/>\n
+        \ </package>\n</collection>\n"
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - text/plain; charset=utf-8
+      Date:
+      - Fri, 07 Mar 2025 16:33:23 GMT
+      Etag:
+      - W/"450d5c8d6e2c145c7a45cdae8a381be4"
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept,Accept-Encoding
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      status:
+      - 200 OK
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250305T092451.3e1fb88a2
+      x-opensuse-runtimes:
+      - '{"view":1.9008509116247296,"db":1243.2099026441574,"backend":10.096523}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - 649e73ee-bde5-491a-a9d6-8b521f01ace5
+      x-runtime:
+      - '1.357130'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: POST
+    uri: /source?cmd=branch&attribute=OBS:Maintained&package=podman&update_project_attribute=OBS:UpdateProject&dryrun=1
+  response:
+    body:
+      string: "<collection>\n  <package project=\"SUSE:SLE-15-SP5:Update\" package=\"podman\">\n
+        \   <target project=\"home:dancermak:branches:OBS_Maintained:podman\" package=\"podman.SUSE:SLE-15-SP5:Update\"/>\n
+        \ </package>\n</collection>\n"
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - text/plain; charset=utf-8
+      Date:
+      - Fri, 07 Mar 2025 16:50:50 GMT
+      Etag:
+      - W/"54cdee07263c451060145dc04ff8aee4"
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept,Accept-Encoding
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      status:
+      - 200 OK
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250305T092451.3e1fb88a2
+      x-opensuse-runtimes:
+      - '{"view":0.3961630864068866,"db":1254.1389367580414,"backend":14.032727}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - 98236ece-8514-4c0c-bc36-c5a4c16fd879
+      x-runtime:
+      - '1.344057'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: POST
+    uri: /source?cmd=branch&attribute=OBS:Maintained&package=podman&update_project_attribute=OBS:UpdateProject&dryrun=1
+  response:
+    body:
+      string: "<collection>\n  <package project=\"SUSE:SLE-15-SP5:Update\" package=\"podman\">\n
+        \   <target project=\"home:dancermak:branches:OBS_Maintained:podman\" package=\"podman.SUSE:SLE-15-SP5:Update\"/>\n
+        \ </package>\n</collection>\n"
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - text/plain; charset=utf-8
+      Date:
+      - Fri, 07 Mar 2025 16:51:20 GMT
+      Etag:
+      - W/"b9195ebe65f3d2cd1a4112bbd9ce8b37"
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept,Accept-Encoding
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      status:
+      - 200 OK
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250305T092451.3e1fb88a2
+      x-opensuse-runtimes:
+      - '{"view":0.6346829468384385,"db":1203.0825219154358,"backend":11.941814}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - 570b2ee8-cfd9-4443-ade5-98bb1c905600
+      x-runtime:
+      - '1.306272'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+version: 1

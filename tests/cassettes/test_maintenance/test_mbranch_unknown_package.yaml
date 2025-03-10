@@ -1,0 +1,401 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: POST
+    uri: /source?cmd=branch&attribute=OBS:Maintained&package=passt&update_project_attribute=OBS:UpdateProject
+  response:
+    body:
+      string: "<status code=\"not_found\">\n  <summary>no packages found by search
+        criteria</summary>\n</status>\n"
+    headers:
+      Cache-Control:
+      - no-cache
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 07 Mar 2025 16:21:43 GMT
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept,Accept-Encoding
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      status:
+      - 404 Not Found
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250305T092451.3e1fb88a2
+      x-opensuse-errorcode:
+      - not_found
+      x-opensuse-runtimes:
+      - '{"view":3.4428369253873825,"db":1330.5398118495941,"backend":0}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - de6e88e4-16de-4081-80fa-76245746c9a0
+      x-runtime:
+      - '1.541161'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 404
+      message: Not Found
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: POST
+    uri: /source?cmd=branch&attribute=OBS:Maintained&package=passt&update_project_attribute=OBS:UpdateProject
+  response:
+    body:
+      string: "<status code=\"not_found\">\n  <summary>no packages found by search
+        criteria</summary>\n</status>\n"
+    headers:
+      Cache-Control:
+      - no-cache
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 07 Mar 2025 16:22:20 GMT
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept,Accept-Encoding
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      status:
+      - 404 Not Found
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250305T092451.3e1fb88a2
+      x-opensuse-errorcode:
+      - not_found
+      x-opensuse-runtimes:
+      - '{"view":0.6535539869219065,"db":1248.2474837303162,"backend":0}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - 33efddf8-d369-4acd-8ab3-64f8e1710bdb
+      x-runtime:
+      - '1.442460'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 404
+      message: Not Found
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: POST
+    uri: /source?cmd=branch&attribute=OBS:Maintained&package=passt&update_project_attribute=OBS:UpdateProject
+  response:
+    body:
+      string: "<status code=\"not_found\">\n  <summary>no packages found by search
+        criteria</summary>\n</status>\n"
+    headers:
+      Cache-Control:
+      - no-cache
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 07 Mar 2025 16:23:34 GMT
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept,Accept-Encoding
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      status:
+      - 404 Not Found
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250305T092451.3e1fb88a2
+      x-opensuse-errorcode:
+      - not_found
+      x-opensuse-runtimes:
+      - '{"view":0.7911990396678448,"db":1492.3767060041428,"backend":0}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - ab74f417-2369-4945-9d3e-feabf4c2b67a
+      x-runtime:
+      - '1.677881'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 404
+      message: Not Found
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: POST
+    uri: /source?cmd=branch&attribute=OBS:Maintained&package=passt&update_project_attribute=OBS:UpdateProject
+  response:
+    body:
+      string: "<status code=\"not_found\">\n  <summary>no packages found by search
+        criteria</summary>\n</status>\n"
+    headers:
+      Cache-Control:
+      - no-cache
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 07 Mar 2025 16:29:44 GMT
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept,Accept-Encoding
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      status:
+      - 404 Not Found
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250305T092451.3e1fb88a2
+      x-opensuse-errorcode:
+      - not_found
+      x-opensuse-runtimes:
+      - '{"view":0.8986881002783775,"db":1258.8296579122543,"backend":0}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - 61320fb1-d55a-482d-9d8b-19d610495816
+      x-runtime:
+      - '1.446010'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 404
+      message: Not Found
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: POST
+    uri: /source?cmd=branch&attribute=OBS:Maintained&package=passt&update_project_attribute=OBS:UpdateProject
+  response:
+    body:
+      string: "<status code=\"not_found\">\n  <summary>no packages found by search
+        criteria</summary>\n</status>\n"
+    headers:
+      Cache-Control:
+      - no-cache
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 07 Mar 2025 16:33:31 GMT
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept,Accept-Encoding
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      status:
+      - 404 Not Found
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250305T092451.3e1fb88a2
+      x-opensuse-errorcode:
+      - not_found
+      x-opensuse-runtimes:
+      - '{"view":0.9483130415901542,"db":1273.692441701889,"backend":0}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - c87eecd8-df1a-4a4e-bcd5-8f4ded3598f5
+      x-runtime:
+      - '1.495994'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 404
+      message: Not Found
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: POST
+    uri: /source?cmd=branch&attribute=OBS:Maintained&package=passt&update_project_attribute=OBS:UpdateProject
+  response:
+    body:
+      string: "<status code=\"not_found\">\n  <summary>no packages found by search
+        criteria</summary>\n</status>\n"
+    headers:
+      Cache-Control:
+      - no-cache
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 07 Mar 2025 16:50:59 GMT
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept,Accept-Encoding
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      status:
+      - 404 Not Found
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250305T092451.3e1fb88a2
+      x-opensuse-errorcode:
+      - not_found
+      x-opensuse-runtimes:
+      - '{"view":0.583491986617446,"db":1275.2664473056793,"backend":0}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - fa278ecf-fe4e-45ce-b5ff-b8358a567c41
+      x-runtime:
+      - '1.450305'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 404
+      message: Not Found
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: POST
+    uri: /source?cmd=branch&attribute=OBS:Maintained&package=passt&update_project_attribute=OBS:UpdateProject
+  response:
+    body:
+      string: "<status code=\"not_found\">\n  <summary>no packages found by search
+        criteria</summary>\n</status>\n"
+    headers:
+      Cache-Control:
+      - no-cache
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 07 Mar 2025 16:51:28 GMT
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept,Accept-Encoding
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      status:
+      - 404 Not Found
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250305T092451.3e1fb88a2
+      x-opensuse-errorcode:
+      - not_found
+      x-opensuse-runtimes:
+      - '{"view":0.5670509999617934,"db":1268.1994819641113,"backend":0}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - 45ff49f6-91d9-456f-af8b-4ccb4232d54d
+      x-runtime:
+      - '1.441899'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 404
+      message: Not Found
+version: 1

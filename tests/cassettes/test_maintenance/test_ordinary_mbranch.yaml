@@ -1,0 +1,800 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: POST
+    uri: /source?cmd=branch&attribute=OBS:Maintained&package=gcc12&update_project_attribute=OBS:UpdateProject
+  response:
+    body:
+      string: "<status code=\"ok\">\n  <summary>Ok</summary>\n  <data name=\"targetproject\">home:dancermak:branches:OBS_Maintained:gcc12</data>\n
+        \ <data name=\"targetpackage\">gcc12.SUSE_SLE-15_Update</data>\n  <data name=\"sourceproject\">SUSE:SLE-15:Update</data>\n
+        \ <data name=\"sourcepackage\">gcc12</data>\n</status>\n"
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 07 Mar 2025 16:21:36 GMT
+      Etag:
+      - W/"25f59d21ebe3cd68f6d67f1a125d7e7c"
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept,Accept-Encoding
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      status:
+      - 200 OK
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250305T092451.3e1fb88a2
+      x-opensuse-runtimes:
+      - '{"view":2.9976710211485624,"db":4416.136607527733,"backend":1311.4112790000001}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - b330cc4b-f432-4e1c-981f-77ba73fd41fa
+      x-runtime:
+      - '6.941144'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: DELETE
+    uri: /source/home:dancermak:branches:OBS_Maintained:gcc12/?force=1
+  response:
+    body:
+      string: "<status code=\"ok\">\n  <summary>Ok</summary>\n</status>\n"
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 07 Mar 2025 16:21:43 GMT
+      Etag:
+      - W/"2f8ece363accfdd3b02c9c0998e76f45"
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept,Accept-Encoding
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      status:
+      - 200 OK
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250305T092451.3e1fb88a2
+      x-opensuse-runtimes:
+      - '{"view":1.2407259782776237,"db":329.9964964389801,"backend":21.642588}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - f8a6da75-b2d2-4bd5-a7e1-77e5ebb678cd
+      x-runtime:
+      - '0.692642'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: POST
+    uri: /source?cmd=branch&attribute=OBS:Maintained&package=gcc12&update_project_attribute=OBS:UpdateProject
+  response:
+    body:
+      string: "<status code=\"ok\">\n  <summary>Ok</summary>\n  <data name=\"targetproject\">home:dancermak:branches:OBS_Maintained:gcc12</data>\n
+        \ <data name=\"targetpackage\">gcc12.SUSE_SLE-15_Update</data>\n  <data name=\"sourceproject\">SUSE:SLE-15:Update</data>\n
+        \ <data name=\"sourcepackage\">gcc12</data>\n</status>\n"
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 07 Mar 2025 16:22:16 GMT
+      Etag:
+      - W/"1020c3ae79ea7c31d6784b96768d8a63"
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept,Accept-Encoding
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      status:
+      - 200 OK
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250305T092451.3e1fb88a2
+      x-opensuse-runtimes:
+      - '{"view":1.8922799499705434,"db":2221.933005332947,"backend":289.033578}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - fb956e6c-a4ca-463c-8c53-62e07c483f2b
+      x-runtime:
+      - '3.458502'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: DELETE
+    uri: /source/home:dancermak:branches:OBS_Maintained:gcc12/?force=1
+  response:
+    body:
+      string: "<status code=\"ok\">\n  <summary>Ok</summary>\n</status>\n"
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 07 Mar 2025 16:22:19 GMT
+      Etag:
+      - W/"e63ec3a796d0dd855269e8b33474bece"
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept,Accept-Encoding
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      status:
+      - 200 OK
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250305T092451.3e1fb88a2
+      x-opensuse-runtimes:
+      - '{"view":0.9693059837445617,"db":263.23754048347473,"backend":19.355332999999998}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - 7f65fec4-f8aa-4925-b344-4961ed858650
+      x-runtime:
+      - '0.597693'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: POST
+    uri: /source?cmd=branch&attribute=OBS:Maintained&package=gcc12&update_project_attribute=OBS:UpdateProject
+  response:
+    body:
+      string: "<status code=\"ok\">\n  <summary>Ok</summary>\n  <data name=\"targetproject\">home:dancermak:branches:OBS_Maintained:gcc12</data>\n
+        \ <data name=\"targetpackage\">gcc12.SUSE_SLE-15_Update</data>\n  <data name=\"sourceproject\">SUSE:SLE-15:Update</data>\n
+        \ <data name=\"sourcepackage\">gcc12</data>\n</status>\n"
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 07 Mar 2025 16:23:20 GMT
+      Etag:
+      - W/"5b441454043b3868a7d674ae928f4d50"
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept,Accept-Encoding
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      status:
+      - 200 OK
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250305T092451.3e1fb88a2
+      x-opensuse-runtimes:
+      - '{"view":0.8315410232171416,"db":12111.312240958214,"backend":428.26338200000004}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - ff949a8b-bb96-42b0-9293-3d7839535e04
+      x-runtime:
+      - '13.478391'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: DELETE
+    uri: /source/home:dancermak:branches:OBS_Maintained:gcc12/?force=1
+  response:
+    body:
+      string: "<status code=\"ok\">\n  <summary>Ok</summary>\n</status>\n"
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 07 Mar 2025 16:23:33 GMT
+      Etag:
+      - W/"7b58d9ddb7350d4df05ea12208b72e42"
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept,Accept-Encoding
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      status:
+      - 200 OK
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250305T092451.3e1fb88a2
+      x-opensuse-runtimes:
+      - '{"view":0.9516050340607762,"db":222.43240797519684,"backend":329.306285}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - ac0bd05e-9c30-4c57-94a0-457ac8a1ca08
+      x-runtime:
+      - '0.828293'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: POST
+    uri: /source?cmd=branch&attribute=OBS:Maintained&package=gcc12&update_project_attribute=OBS:UpdateProject
+  response:
+    body:
+      string: "<status code=\"ok\">\n  <summary>Ok</summary>\n  <data name=\"targetproject\">home:dancermak:branches:OBS_Maintained:gcc12</data>\n
+        \ <data name=\"targetpackage\">gcc12.SUSE_SLE-15_Update</data>\n  <data name=\"sourceproject\">SUSE:SLE-15:Update</data>\n
+        \ <data name=\"sourcepackage\">gcc12</data>\n</status>\n"
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 07 Mar 2025 16:29:39 GMT
+      Etag:
+      - W/"3e3d2e6f57df12c16cd815aed4d76e7b"
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept,Accept-Encoding
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      status:
+      - 200 OK
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250305T092451.3e1fb88a2
+      x-opensuse-runtimes:
+      - '{"view":1.037225010804832,"db":2450.8466955423355,"backend":406.66655299999996}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - de9a4f89-1316-4e8e-8d99-a151a02d80c0
+      x-runtime:
+      - '3.840811'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: DELETE
+    uri: /source/home:dancermak:branches:OBS_Maintained:gcc12/?force=1
+  response:
+    body:
+      string: "<status code=\"ok\">\n  <summary>Ok</summary>\n</status>\n"
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 07 Mar 2025 16:29:43 GMT
+      Etag:
+      - W/"88fc2d30e7482cb5a7b811a4b6cfd0ab"
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept,Accept-Encoding
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      status:
+      - 200 OK
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250305T092451.3e1fb88a2
+      x-opensuse-runtimes:
+      - '{"view":0.9512719698250294,"db":228.49282574653625,"backend":22.032753}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - 935a7ea2-9145-4680-8bb0-3fb1276c3986
+      x-runtime:
+      - '0.558185'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: POST
+    uri: /source?cmd=branch&attribute=OBS:Maintained&package=gcc12&update_project_attribute=OBS:UpdateProject
+  response:
+    body:
+      string: "<status code=\"ok\">\n  <summary>Ok</summary>\n  <data name=\"targetproject\">home:dancermak:branches:OBS_Maintained:gcc12</data>\n
+        \ <data name=\"targetpackage\">gcc12.SUSE_SLE-15_Update</data>\n  <data name=\"sourceproject\">SUSE:SLE-15:Update</data>\n
+        \ <data name=\"sourcepackage\">gcc12</data>\n</status>\n"
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 07 Mar 2025 16:33:26 GMT
+      Etag:
+      - W/"8d7e8c05d74c314f3c6c6013fac1d18b"
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept,Accept-Encoding
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      status:
+      - 200 OK
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250305T092451.3e1fb88a2
+      x-opensuse-runtimes:
+      - '{"view":0.9524249471724033,"db":2179.029690384865,"backend":383.281183}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - c87900c2-d944-4efd-8106-60ac55b8fd01
+      x-runtime:
+      - '3.686670'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: DELETE
+    uri: /source/home:dancermak:branches:OBS_Maintained:gcc12/?force=1
+  response:
+    body:
+      string: "<status code=\"ok\">\n  <summary>Ok</summary>\n</status>\n"
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 07 Mar 2025 16:33:30 GMT
+      Etag:
+      - W/"0c7ace8aeb725c39bd7c31c14800ca04"
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept,Accept-Encoding
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      status:
+      - 200 OK
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250305T092451.3e1fb88a2
+      x-opensuse-runtimes:
+      - '{"view":1.764202956110239,"db":225.3550168275833,"backend":19.274473}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - b8fceb3d-6111-4e63-9185-befba02ad942
+      x-runtime:
+      - '0.601934'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: POST
+    uri: /source?cmd=branch&attribute=OBS:Maintained&package=gcc12&update_project_attribute=OBS:UpdateProject
+  response:
+    body:
+      string: "<status code=\"ok\">\n  <summary>Ok</summary>\n  <data name=\"targetproject\">home:dancermak:branches:OBS_Maintained:gcc12</data>\n
+        \ <data name=\"targetpackage\">gcc12.SUSE_SLE-15_Update</data>\n  <data name=\"sourceproject\">SUSE:SLE-15:Update</data>\n
+        \ <data name=\"sourcepackage\">gcc12</data>\n</status>\n"
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 07 Mar 2025 16:50:54 GMT
+      Etag:
+      - W/"0ebe7ee3986ba691c6f0f46b3e205c0a"
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept,Accept-Encoding
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      status:
+      - 200 OK
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250305T092451.3e1fb88a2
+      x-opensuse-runtimes:
+      - '{"view":0.9045839542523026,"db":2869.412546515465,"backend":525.237808}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - c216d66f-e1a1-42e0-b076-9d951ce5cfb2
+      x-runtime:
+      - '4.398745'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: DELETE
+    uri: /source/home:dancermak:branches:OBS_Maintained:gcc12/?force=1
+  response:
+    body:
+      string: "<status code=\"ok\">\n  <summary>Ok</summary>\n</status>\n"
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 07 Mar 2025 16:50:58 GMT
+      Etag:
+      - W/"136006a189f21704101ac015a2b6c9d7"
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept,Accept-Encoding
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      status:
+      - 200 OK
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250305T092451.3e1fb88a2
+      x-opensuse-runtimes:
+      - '{"view":1.0587789583951235,"db":247.06359457969666,"backend":27.834765}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - dc77215b-4e35-44ef-be00-a7a2ca60bf4f
+      x-runtime:
+      - '0.572079'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: POST
+    uri: /source?cmd=branch&attribute=OBS:Maintained&package=gcc12&update_project_attribute=OBS:UpdateProject
+  response:
+    body:
+      string: "<status code=\"ok\">\n  <summary>Ok</summary>\n  <data name=\"targetproject\">home:dancermak:branches:OBS_Maintained:gcc12</data>\n
+        \ <data name=\"targetpackage\">gcc12.SUSE_SLE-15_Update</data>\n  <data name=\"sourceproject\">SUSE:SLE-15:Update</data>\n
+        \ <data name=\"sourcepackage\">gcc12</data>\n</status>\n"
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 07 Mar 2025 16:51:24 GMT
+      Etag:
+      - W/"25081d9f75f646e6340cfeccb70847a3"
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept,Accept-Encoding
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      status:
+      - 200 OK
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250305T092451.3e1fb88a2
+      x-opensuse-runtimes:
+      - '{"view":1.1326019885018468,"db":2097.008267521858,"backend":360.96795}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - 02cc871f-c935-4dc6-86aa-1d8fddbab01b
+      x-runtime:
+      - '3.418237'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/xml; charset=utf-8
+    method: DELETE
+    uri: /source/home:dancermak:branches:OBS_Maintained:gcc12/?force=1
+  response:
+    body:
+      string: "<status code=\"ok\">\n  <summary>Ok</summary>\n</status>\n"
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 07 Mar 2025 16:51:27 GMT
+      Etag:
+      - W/"1107d7e049a59f684a571a21e4225b97"
+      Server:
+      - Apache/2.4.58 (Linux/SUSE)
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept,Accept-Encoding
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      status:
+      - 200 OK
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - SAMEORIGIN
+      x-opensuse-apiversion:
+      - 2.11~alpha.20250305T092451.3e1fb88a2
+      x-opensuse-runtimes:
+      - '{"view":1.1315320152789354,"db":255.35980784893036,"backend":25.56131}'
+      x-permitted-cross-domain-policies:
+      - none
+      x-powered-by:
+      - Phusion Passenger(R)
+      x-request-id:
+      - a9560a3c-c08f-4a76-82e2-bf5c0061c9b7
+      x-runtime:
+      - '0.563968'
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+version: 1
