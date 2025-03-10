@@ -1,17 +1,19 @@
-from dataclasses import dataclass
 import os
-from typing import AsyncGenerator, Self
+from collections.abc import AsyncGenerator
+from dataclasses import dataclass
+from typing import Self
 from urllib.parse import urlparse
+
 import pytest
 import pytest_asyncio
 from vcr import VCR
 from vcr.record_mode import RecordMode
 
-from py_obs.osc import ObsException, Osc
-from py_obs.person import Person
 import py_obs.project as project
+from py_obs.osc import ObsException
+from py_obs.osc import Osc
+from py_obs.person import Person
 from py_obs.xml_factory import StrElementField
-
 
 LOCAL_OSC_T = tuple[Osc, Osc]
 OSC_FROM_ENV_T = Osc

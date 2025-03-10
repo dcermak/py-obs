@@ -1,10 +1,11 @@
-from typing import AsyncGenerator
+from collections.abc import AsyncGenerator
 
+import pytest
 import pytest_asyncio
+
 from py_obs.project import upload_file_contents
 from py_obs.service import service_wait
 from tests.conftest import HOME_PROJ_T
-import pytest
 
 
 @pytest_asyncio.fixture(scope="function")

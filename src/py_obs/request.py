@@ -1,16 +1,26 @@
 import asyncio
 import enum
-from urllib.parse import urlencode
-import xml.etree.ElementTree as ET
-from dataclasses import Field, dataclass, field
-from typing import ClassVar, NoReturn, TypeVar, overload
 import typing
+import xml.etree.ElementTree as ET
+from dataclasses import Field
+from dataclasses import dataclass
+from dataclasses import field
+from typing import ClassVar
+from typing import NoReturn
+from typing import TypeVar
+from typing import overload
+from urllib.parse import urlencode
+
 from py_obs.history import fetch_package_history
 from py_obs.osc import Osc
 from py_obs.person import Person2
+from py_obs.project import Package
+from py_obs.project import Person
+from py_obs.project import PersonRole
+from py_obs.project import Project
 
-from py_obs.project import Package, Person, PersonRole, Project
-from .xml_factory import MetaMixin, StrElementField
+from .xml_factory import MetaMixin
+from .xml_factory import StrElementField
 
 
 @enum.unique

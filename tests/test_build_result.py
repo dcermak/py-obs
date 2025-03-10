@@ -1,12 +1,10 @@
 import pytest
 
-from py_obs.build_result import (
-    BuildResult,
-    PackageCode,
-    PackageStatus,
-    RepositoryCode,
-    fetch_build_result,
-)
+from py_obs.build_result import BuildResult
+from py_obs.build_result import PackageCode
+from py_obs.build_result import PackageStatus
+from py_obs.build_result import RepositoryCode
+from py_obs.build_result import fetch_build_result
 from tests.conftest import OSC_FROM_ENV_T
 
 

@@ -12,11 +12,15 @@ non-administrators.
 """
 
 from dataclasses import dataclass
-from enum import StrEnum, auto, unique
-from typing import ClassVar, Literal, overload
+from enum import StrEnum
+from enum import auto
+from enum import unique
+from typing import ClassVar
+from typing import Literal
+from typing import overload
+
 from py_obs.osc import Osc
 from py_obs.status import Status
-
 from py_obs.xml_factory import MetaMixin
 
 

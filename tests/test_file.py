@@ -1,7 +1,10 @@
 import asyncio
-import pytest
-from py_obs.project import fetch_all_files, fetch_file_contents, upload_file_contents
 
+import pytest
+
+from py_obs.project import fetch_all_files
+from py_obs.project import fetch_file_contents
+from py_obs.project import upload_file_contents
 from tests.conftest import HOME_PROJ_T
 
 

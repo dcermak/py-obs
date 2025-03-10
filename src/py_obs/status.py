@@ -1,8 +1,11 @@
-from dataclasses import dataclass, field
-from typing import ClassVar, Type
 import xml.etree.ElementTree as ET
+from dataclasses import dataclass
+from dataclasses import field
+from typing import ClassVar
+from typing import Type
 
-from py_obs.xml_factory import MetaMixin, StrElementField
+from py_obs.xml_factory import MetaMixin
+from py_obs.xml_factory import StrElementField
 
 
 @dataclass(frozen=True)

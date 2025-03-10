@@ -1,19 +1,20 @@
 import xml.etree.ElementTree as ET
+
 import pytest
+
 from py_obs.person import PersonRole
-from py_obs.project import (
-    Package,
-    PathEntry,
-    Person,
-    Project,
-    RebuildMode,
-    Repository,
-    fetch_meta,
-    fetch_package_list,
-    send_meta,
-)
+from py_obs.project import Package
+from py_obs.project import PathEntry
+from py_obs.project import Person
+from py_obs.project import Project
+from py_obs.project import RebuildMode
+from py_obs.project import Repository
+from py_obs.project import fetch_meta
+from py_obs.project import fetch_package_list
+from py_obs.project import send_meta
 from py_obs.xml_factory import StrElementField
-from tests.conftest import HOME_PROJ_T, OSC_FROM_ENV_T
+from tests.conftest import HOME_PROJ_T
+from tests.conftest import OSC_FROM_ENV_T
 
 
 @pytest.mark.parametrize(

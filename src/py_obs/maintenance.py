@@ -1,7 +1,11 @@
+import re
 from dataclasses import dataclass
 
-from aiohttp import ClientResponse, ClientResponseError
-from py_obs.osc import ObsException, Osc
+from aiohttp import ClientResponse
+from aiohttp import ClientResponseError
+
+from py_obs.osc import ObsException
+from py_obs.osc import Osc
 from py_obs.project import Package
 from py_obs.status import Status
 from py_obs.xml_factory import MetaMixin
@@ -21,11 +25,27 @@ class _Collection(MetaMixin):
     package: list[_Package]
 
 
+_DOUBLE_BRANCH_RE = re.compile(r"(?P<proj>[^\s/]+)/(?P<pkg>[^\s/]+)$")
+
+
 class DoubleBranchException(ObsException):
     """Exception raised when a package is branched twice into the user's home
     project.
 
     """
+
+    def __init__(self, obs_status: Status, **kwargs) -> None:
+        if "message" not in kwargs and obs_status.summary:
+            kwargs["message"] = str(obs_status.summary)
+
+        super().__init__(**kwargs)
+
+        self.project, self.package = None, None
+        if obs_status.summary:
+            res = _DOUBLE_BRANCH_RE.search(obs_status.summary)
+            if res:
+                self.project = res.group("proj")
+                self.package = res.group("pkg")
 
 
 async def _mbranch(
@@ -51,13 +71,7 @@ async def mbranch(osc: Osc, pkg: Package | str) -> str:
 
     Returns:
 
-    A sequence of tuples where the first name of the tuple is the project name
-    and the second the package name.
-
-    .. Note:
-
-       Generally OBS mbranches all packages into the **same** project, but we
-       cannot rely on that unfortunately.
+    The name of the project into which the package has been branched
 
     """
     resp = await _mbranch(osc, pkg, raise_for_status=False, dry_run=False)
@@ -76,10 +90,10 @@ async def mbranch(osc: Osc, pkg: Package | str) -> str:
             status = Status.from_xml(await resp.read())
             if status.code == "double_branch_package":
                 raise DoubleBranchException(
+                    obs_status=status,
                     request_info=resp.request_info,
                     history=resp.history,
                     status=resp.status,
-                    message=str(status.summary) if status.summary else "",
                 )
         except ValueError:
             # this was not a OBS status response or not a double branch

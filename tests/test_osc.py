@@ -1,13 +1,15 @@
 import asyncio
-from datetime import datetime, timedelta
-from pathlib import Path
 import os.path
+from datetime import datetime
+from datetime import timedelta
+from pathlib import Path
 
-from aiohttp import ClientResponse
 import aiohttp
 import pytest
+from aiohttp import ClientResponse
 
-from py_obs.osc import BackOff, Osc
+from py_obs.osc import BackOff
+from py_obs.osc import Osc
 from tests.conftest import LOCAL_OSC_T
 
 

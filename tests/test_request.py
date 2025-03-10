@@ -1,24 +1,23 @@
 import asyncio
-import pytest
 import xml.etree.ElementTree as ET
+
+import pytest
+
 from py_obs.history import fetch_package_history
 from py_obs.project import upload_file_contents
-
-from py_obs.request import (
-    _RequestCollection,
-    PackageRevision,
-    Request,
-    RequestAction,
-    RequestActionType,
-    RequestSource,
-    RequestState,
-    RequestStatus,
-    RequestTarget,
-    delete,
-    fetch_request,
-    search_for_requests,
-    submit_package,
-)
+from py_obs.request import PackageRevision
+from py_obs.request import Request
+from py_obs.request import RequestAction
+from py_obs.request import RequestActionType
+from py_obs.request import RequestSource
+from py_obs.request import RequestState
+from py_obs.request import RequestStatus
+from py_obs.request import RequestTarget
+from py_obs.request import _RequestCollection
+from py_obs.request import delete
+from py_obs.request import fetch_request
+from py_obs.request import search_for_requests
+from py_obs.request import submit_package
 from py_obs.xml_factory import StrElementField
 from tests.conftest import HOME_PROJ_T
 

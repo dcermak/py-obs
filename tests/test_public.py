@@ -1,8 +1,9 @@
 import pytest
+
 from py_obs.osc import Osc
 from py_obs.project import fetch_meta
-
-from tests.conftest import HOME_PROJ_T, local_obs_apiurl
+from tests.conftest import HOME_PROJ_T
+from tests.conftest import local_obs_apiurl
 
 
 @pytest.mark.asyncio
