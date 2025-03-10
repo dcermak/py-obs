@@ -1,8 +1,16 @@
+from dataclasses import Field
+from dataclasses import dataclass
+from typing import Any
+from typing import ClassVar
+from typing import Optional
+from xml.etree.ElementTree import canonicalize
+from xml.etree.ElementTree import fromstring
+from xml.etree.ElementTree import tostring
+
 import pytest
-from dataclasses import dataclass, Field
-from typing import ClassVar, Optional, Any
-from xml.etree.ElementTree import fromstring, tostring, canonicalize
-from py_obs.xml_factory import MetaMixin, StrElementField
+
+from py_obs.xml_factory import MetaMixin
+from py_obs.xml_factory import StrElementField
 
 
 @dataclass(frozen=True)

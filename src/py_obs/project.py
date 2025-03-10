@@ -1,20 +1,24 @@
 import asyncio
-from dataclasses import dataclass, field
-from enum import StrEnum, auto
-from typing import ClassVar, cast, overload
 import xml.etree.ElementTree as ET
+from dataclasses import dataclass
+from dataclasses import field
+from enum import StrEnum
+from enum import auto
+from typing import ClassVar
+from typing import cast
+from typing import overload
 
 from py_obs.osc import Osc
-from py_obs.person import (
-    OwnerCollection,
-    Person,
-    Person2,
-    PersonRole,
-    UserGroup,
-    fetch_group,
-)
+from py_obs.person import OwnerCollection
+from py_obs.person import Person
+from py_obs.person import Person2
+from py_obs.person import PersonRole
+from py_obs.person import UserGroup
+from py_obs.person import fetch_group
 from py_obs.status import Status
-from .xml_factory import MetaMixin, StrElementField
+
+from .xml_factory import MetaMixin
+from .xml_factory import StrElementField
 
 
 @dataclass(frozen=True)

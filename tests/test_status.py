@@ -1,4 +1,5 @@
 import pytest
+
 from py_obs.status import Status
 
 

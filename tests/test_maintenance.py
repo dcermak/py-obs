@@ -1,13 +1,12 @@
-from aiohttp import ClientResponseError
 import pytest
+from aiohttp import ClientResponseError
 from vcr import VCR
 
-from py_obs.maintenance import (
-    DoubleBranchException,
-    fetch_maintained_code_streams,
-    mbranch,
-)
-from tests.conftest import OSC_FROM_ENV_T, ProjectCleaner
+from py_obs.maintenance import DoubleBranchException
+from py_obs.maintenance import fetch_maintained_code_streams
+from py_obs.maintenance import mbranch
+from tests.conftest import OSC_FROM_ENV_T
+from tests.conftest import ProjectCleaner
 
 
 @pytest.mark.vcr
@@ -25,7 +24,7 @@ async def test_fetch_maintained_code_streams_of_existing_pkg(
 async def test_maintained_code_streams_of_invalid_pkg(
     osc_from_env: OSC_FROM_ENV_T,
 ) -> None:
-    assert [] == await fetch_maintained_code_streams(osc_from_env, "asdf")
+    assert await fetch_maintained_code_streams(osc_from_env, "asdf") == []
 
 
 @pytest.mark.vcr

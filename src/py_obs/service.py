@@ -1,5 +1,6 @@
 from py_obs.osc import Osc
-from py_obs.project import Package, Project
+from py_obs.project import Package
+from py_obs.project import Project
 
 
 async def service_wait(

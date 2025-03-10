@@ -1,10 +1,12 @@
-from datetime import datetime
 import re
+from datetime import datetime
+
 import pytest
 
 from py_obs.history import fetch_package_history
-from py_obs.project import delete, fetch_package_diff, upload_file_contents
-
+from py_obs.project import delete
+from py_obs.project import fetch_package_diff
+from py_obs.project import upload_file_contents
 from tests.conftest import HOME_PROJ_T
 
 

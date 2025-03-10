@@ -1,9 +1,11 @@
 import enum
-from dataclasses import dataclass, field
+from dataclasses import dataclass
+from dataclasses import field
 from typing import ClassVar
 
 from py_obs.osc import Osc
-from py_obs.xml_factory import MetaMixin, StrElementField
+from py_obs.xml_factory import MetaMixin
+from py_obs.xml_factory import StrElementField
 
 
 @enum.unique

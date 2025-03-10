@@ -1,7 +1,11 @@
 import pytest
-from py_obs.token import TokenKind, create_token, delete_token, fetch_user_tokens
 
-from tests.conftest import HOME_PROJ_T, osc_test_user_name
+from py_obs.token import TokenKind
+from py_obs.token import create_token
+from py_obs.token import delete_token
+from py_obs.token import fetch_user_tokens
+from tests.conftest import HOME_PROJ_T
+from tests.conftest import osc_test_user_name
 
 # hack, rely on implementation details of the home_project fixture
 PRJ = f"home:{osc_test_user_name()}"

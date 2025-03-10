@@ -1,14 +1,15 @@
 import xml.etree.ElementTree as ET
+
 import pytest
-from py_obs.project import (
-    DevelProject,
-    Package,
-    Person,
-    branch_package,
-    fetch_meta,
-)
+
+from py_obs.project import DevelProject
+from py_obs.project import Package
+from py_obs.project import Person
+from py_obs.project import branch_package
+from py_obs.project import fetch_meta
 from py_obs.xml_factory import StrElementField
-from tests.conftest import HOME_PROJ_T, ProjectCleaner
+from tests.conftest import HOME_PROJ_T
+from tests.conftest import ProjectCleaner
 
 
 @pytest.mark.parametrize(

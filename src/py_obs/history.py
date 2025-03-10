@@ -1,12 +1,14 @@
-from dataclasses import dataclass
 import datetime
-import xml.etree.ElementTree as ET
-from typing import ClassVar
 import typing
-from py_obs.osc import Osc
-from py_obs.project import Package, Project
+import xml.etree.ElementTree as ET
+from dataclasses import dataclass
+from typing import ClassVar
 
-from py_obs.xml_factory import MetaMixin, StrElementField
+from py_obs.osc import Osc
+from py_obs.project import Package
+from py_obs.project import Project
+from py_obs.xml_factory import MetaMixin
+from py_obs.xml_factory import StrElementField
 
 
 @dataclass(frozen=True)

@@ -1,8 +1,9 @@
 from dataclasses import dataclass
 from typing import ClassVar
-from py_obs.osc import Osc
 
-from py_obs.xml_factory import MetaMixin, StrElementField
+from py_obs.osc import Osc
+from py_obs.xml_factory import MetaMixin
+from py_obs.xml_factory import StrElementField
 
 
 @dataclass(frozen=True)

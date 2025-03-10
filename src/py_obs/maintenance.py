@@ -1,7 +1,10 @@
 from dataclasses import dataclass
 
-from aiohttp import ClientResponse, ClientResponseError
-from py_obs.osc import ObsException, Osc
+from aiohttp import ClientResponse
+from aiohttp import ClientResponseError
+
+from py_obs.osc import ObsException
+from py_obs.osc import Osc
 from py_obs.project import Package
 from py_obs.status import Status
 from py_obs.xml_factory import MetaMixin

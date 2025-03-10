@@ -1,5 +1,7 @@
 import pytest
-from py_obs.configuration import Configuration, fetch_configuration
+
+from py_obs.configuration import Configuration
+from py_obs.configuration import fetch_configuration
 from tests.conftest import LOCAL_OSC_T
 
 

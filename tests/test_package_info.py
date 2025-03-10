@@ -1,6 +1,7 @@
 import pytest
 
-from py_obs.project import PackageSourceInfo, fetch_package_info
+from py_obs.project import PackageSourceInfo
+from py_obs.project import fetch_package_info
 from tests.conftest import OSC_FROM_ENV_T
 
 
