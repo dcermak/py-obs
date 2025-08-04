@@ -11,7 +11,6 @@ import typing
 import urllib.request
 
 import aiohttp
-from aiohttp.abc import AbstractCookieJar
 from multidict import CIMultiDictProxy
 from yarl import URL
 
@@ -89,31 +88,41 @@ class SignatureAuth(aiohttp.BasicAuth):
         return auth
 
 
-class CookieJar(http.cookiejar.LWPCookieJar):
+class LwpFileCookieJar(aiohttp.CookieJar):
     """
-    A wrapper encapsulating LWPCookieJar for use in aiohttp.
+    An aiohttp.CookieJar wrapper with support for loading from and saving to
+    a LWP-formatted cookie file.
     """
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if os.path.isfile(self.filename):
+    def __init__(self, file_path: str):
+        self.file_path = file_path
+        self.initialized = False
+
+    def __call__(self) -> typing.Self:
+        """Postponed initialization for when we're in the async context."""
+        if self.initialized:
+            return self
+
+        super().__init__()  # This has to be called in an async context
+
+        if os.path.isfile(self.file_path):
+            lwp_jar = http.cookiejar.LWPCookieJar(self.file_path)
             try:
-                self.load()
+                lwp_jar.load(ignore_discard=True, ignore_expires=True)
+
+                super().update_cookies(
+                    {cookie.name: cookie.value for cookie in lwp_jar}  # type: ignore[assignment]
+                )
             except http.cookiejar.LoadError:
                 pass
 
-    def filter_cookies(self, request_url):
-        result = []
-        for cookie in self:
-            if cookie.domain == request_url.host or (
-                cookie.domain.startswith(".")
-                and request_url.host.endswith(cookie.domain)
-            ):
-                result.append((cookie.name, cookie.value))
-        return result
+        self.initialized = True
+        return self
 
-    def update_cookies(self, cookies, response_url):
-        for name, cookie in cookies.items():
+    def _save(self):
+        lwp_jar = http.cookiejar.LWPCookieJar(self.file_path)
+
+        for cookie in self:
             if cookie["max-age"]:
                 now = int(time.time())
                 expires = now + int(cookie["max-age"])
@@ -124,7 +133,7 @@ class CookieJar(http.cookiejar.LWPCookieJar):
 
             c = http.cookiejar.Cookie(
                 version=cookie["version"] or 0,
-                name=name,
+                name=cookie.key,
                 value=cookie.value,
                 port=None,
                 port_specified=False,
@@ -140,14 +149,19 @@ class CookieJar(http.cookiejar.LWPCookieJar):
                 comment_url=None,
                 rest={},
             )
-            self.set_cookie(c)
+            lwp_jar.set_cookie(c)
 
         try:
-            os.makedirs(os.path.dirname(self.filename), mode=0o700)
+            os.makedirs(os.path.dirname(self.file_path), mode=0o700)
         except FileExistsError:
             pass
+        lwp_jar.save(ignore_discard=True, ignore_expires=True)
 
-        self.save()
+    def update_cookies(self, *args, **kwargs):
+        """Overrides the parent method to add a save operation."""
+        super().update_cookies(*args, **kwargs)
+
+        self._save()
 
 
 _DEFAULT_API_URL = "https://api.opensuse.org/"
@@ -181,7 +195,7 @@ class Osc:
     public: bool = False
     cookie_jar_path: str = os.path.expanduser("~/.local/state/osc/cookiejar")
 
-    _cookie_jar: CookieJar = None  # type: ignore[assignment]
+    _cookie_jar: LwpFileCookieJar = None  # type: ignore[assignment]
     _auth: aiohttp.BasicAuth | SignatureAuth | None = None
 
     _default_headers: dict[str, str] = dataclasses.field(
@@ -294,11 +308,13 @@ class Osc:
             raise_for_status=raise_for_status,
             base_url=self.api_url,
             headers=self._default_headers,
-            cookie_jar=typing.cast(AbstractCookieJar, self._cookie_jar),
+            cookie_jar=self._cookie_jar(),
         ) as session:
             headers = list(self._default_headers.items())
-            for cookie in session.cookie_jar.filter_cookies(URL(self.api_url)):
-                headers.append(cookie)  # type: ignore[arg-type]
+            for key, cookie in session.cookie_jar.filter_cookies(
+                URL(self.api_url)
+            ).items():
+                headers.append((key, cookie.value))
 
             try:
                 sleep_time = backoff.initial_sleep_time
@@ -400,4 +416,4 @@ class Osc:
         if self.password:
             self._auth = aiohttp.BasicAuth(login=self.username, password=self.password)
 
-        self._cookie_jar = CookieJar(self.cookie_jar_path)
+        self._cookie_jar = LwpFileCookieJar(self.cookie_jar_path)
