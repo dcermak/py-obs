@@ -120,6 +120,14 @@ class LwpFileCookieJar(aiohttp.CookieJar):
         return self
 
     def _save(self):
+        try:
+            os.makedirs(os.path.dirname(self.file_path), mode=0o700)
+        except FileExistsError:
+            pass
+
+        self.lwp_jar().save(ignore_discard=True, ignore_expires=True)
+
+    def lwp_jar(self) -> http.cookiejar.LWPCookieJar:
         lwp_jar = http.cookiejar.LWPCookieJar(self.file_path)
 
         for cookie in self:
@@ -151,11 +159,7 @@ class LwpFileCookieJar(aiohttp.CookieJar):
             )
             lwp_jar.set_cookie(c)
 
-        try:
-            os.makedirs(os.path.dirname(self.file_path), mode=0o700)
-        except FileExistsError:
-            pass
-        lwp_jar.save(ignore_discard=True, ignore_expires=True)
+        return lwp_jar
 
     def update_cookies(self, *args, **kwargs):
         """Overrides the parent method to add a save operation."""
