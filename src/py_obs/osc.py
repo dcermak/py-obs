@@ -2,6 +2,7 @@ import asyncio
 import configparser
 import dataclasses
 import http.cookiejar
+from http.cookies import BaseCookie
 import os
 import os.path
 import re
@@ -11,7 +12,8 @@ import typing
 import urllib.request
 
 import aiohttp
-from aiohttp.abc import AbstractCookieJar
+from aiohttp.abc import AbstractCookieJar, ClearCookiePredicate
+from aiohttp.typedefs import LooseCookies
 from multidict import CIMultiDictProxy
 from yarl import URL
 
@@ -89,65 +91,97 @@ class SignatureAuth(aiohttp.BasicAuth):
         return auth
 
 
-class CookieJar(http.cookiejar.LWPCookieJar):
-    """
-    A wrapper encapsulating LWPCookieJar for use in aiohttp.
-    """
+class CookieJar(AbstractCookieJar):
+    """A wrapper that creates aiohttp.CookieJar with LWP file persistence"""
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if os.path.isfile(self.filename):
+    def __init__(self, file_path: str) -> None:
+        self.file_path = file_path
+        self._jar: aiohttp.CookieJar | None = None
+
+    def _ensure_jar(self) -> aiohttp.CookieJar:
+        if self._jar is None:
+            self._jar = aiohttp.CookieJar()
+            self._load_from_lwp()
+        return self._jar
+
+    def _load_from_lwp(self) -> None:
+        if os.path.isfile(self.file_path):
+            lwp_jar = http.cookiejar.LWPCookieJar(self.file_path)
             try:
-                self.load()
+                lwp_jar.load(ignore_discard=True, ignore_expires=True)
+                # Convert LWP cookies to aiohttp format
+                for cookie in lwp_jar:
+                    if self._jar is not None:
+                        self._jar.update_cookies({cookie.name: cookie.value or ""})
             except http.cookiejar.LoadError:
                 pass
 
-    def filter_cookies(self, request_url):
-        result = []
-        for cookie in self:
-            if cookie.domain == request_url.host or (
-                cookie.domain.startswith(".")
-                and request_url.host.endswith(cookie.domain)
-            ):
-                result.append((cookie.name, cookie.value))
-        return result
+    def _save_to_lwp(self) -> None:
+        if self._jar is None:
+            return
 
-    def update_cookies(self, cookies, response_url):
-        for name, cookie in cookies.items():
-            if cookie["max-age"]:
-                now = int(time.time())
-                expires = now + int(cookie["max-age"])
-            elif cookie["expires"]:
-                expires = cookie["expires"]
-            else:
-                expires = None
+        lwp_jar = http.cookiejar.LWPCookieJar(self.file_path)
 
-            c = http.cookiejar.Cookie(
-                version=cookie["version"] or 0,
-                name=name,
+        # Convert aiohttp cookies back to LWP format
+        for cookie in self._jar:
+            # Handle expires time
+            expires = None
+            if cookie.get("expires"):
+                expires_val = cookie["expires"]
+                if hasattr(expires_val, "timestamp"):
+                    expires = int(expires_val.timestamp())
+                else:
+                    expires = expires_val
+
+            domain = cookie.get("domain", "")
+            lwp_cookie = http.cookiejar.Cookie(
+                version=0,
+                name=cookie.key,
                 value=cookie.value,
                 port=None,
                 port_specified=False,
-                domain=cookie["domain"] or None,
+                domain=domain,
                 domain_specified=True,
-                domain_initial_dot=cookie["domain"].startswith("."),
-                path=cookie["path"] or None,
+                domain_initial_dot=domain.startswith("."),
+                path=cookie.get("path", "/"),
                 path_specified=True,
-                secure=cookie["secure"] or None,
+                secure=cookie.get("secure", False),
                 expires=expires,
                 discard=False,
-                comment=cookie["comment"] or None,
+                comment=None,
                 comment_url=None,
                 rest={},
             )
-            self.set_cookie(c)
+            lwp_jar.set_cookie(lwp_cookie)
 
-        try:
-            os.makedirs(os.path.dirname(self.filename), mode=0o700)
-        except FileExistsError:
-            pass
+        os.makedirs(os.path.dirname(self.file_path), mode=0o700, exist_ok=True)
+        lwp_jar.save(ignore_discard=True, ignore_expires=True)
 
-        self.save()
+    def update_cookies(
+        self, cookies: LooseCookies, response_url: URL | None = None
+    ) -> None:
+        jar = self._ensure_jar()
+        jar.update_cookies(cookies, response_url or URL())
+        self._save_to_lwp()
+
+    def filter_cookies(self, request_url: URL) -> BaseCookie[str]:
+        return self._ensure_jar().filter_cookies(request_url)
+
+    def __iter__(self):
+        return iter(self._ensure_jar())
+
+    def __len__(self) -> int:
+        return len(self._ensure_jar())
+
+    def clear(self, predicate: ClearCookiePredicate | None = None) -> None:
+        return self._ensure_jar().clear(predicate)
+
+    def clear_domain(self, domain: str) -> None:
+        self._ensure_jar().clear_domain(domain)
+
+    @property
+    def quote_cookie(self) -> bool:
+        return self._ensure_jar().quote_cookie
 
 
 _DEFAULT_API_URL = "https://api.opensuse.org/"
