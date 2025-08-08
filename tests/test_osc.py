@@ -13,7 +13,9 @@ from py_obs.osc import Osc
 from tests.conftest import LOCAL_OSC_T
 
 
-def write_oscrc(tmp_path: Path, oscrc_contents: str, monkeypatch) -> None:
+def write_oscrc(
+    tmp_path: Path, oscrc_contents: str, monkeypatch: pytest.MonkeyPatch
+) -> None:
     osc = tmp_path / "osc"
     osc.mkdir()
     with open(osc / "oscrc", "w") as oscrc_f:
@@ -73,7 +75,7 @@ sshkey = id_ed22519
 def test_read_from_oscrc(
     tmp_path: Path,
     oscrc: str,
-    monkeypatch,
+    monkeypatch: pytest.MonkeyPatch,
     username: str,
     password: str | None,
     ssh_key_path: str | None,
@@ -128,7 +130,7 @@ user=me
 async def test_read_from_oscrc_error(
     tmp_path: Path,
     oscrc: str,
-    monkeypatch,
+    monkeypatch: pytest.MonkeyPatch,
     err_msg: str,
 ) -> None:
     write_oscrc(tmp_path, oscrc, monkeypatch)
