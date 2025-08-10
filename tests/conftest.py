@@ -38,14 +38,15 @@ def local_obs_apiurl() -> str:
 @pytest_asyncio.fixture(scope="session", loop_scope="session")
 async def osc_from_env() -> AsyncGenerator[OSC_FROM_ENV_T, None]:
     ssh_key_path = os.getenv("OSC_SSH_PUBKEY")
-    yield Osc(
+    async with Osc(
         username=osc_test_user_name(),
         password=os.getenv(
             "OSC_PASSWORD", "surely-invalid" if not ssh_key_path else ""
         ),
         api_url=local_obs_apiurl(),
         ssh_key_path=ssh_key_path,
-    )
+    ) as osc:
+        yield osc
 
 
 @pytest_asyncio.fixture(scope="function", loop_scope="function")
@@ -53,13 +54,15 @@ async def local_osc(
     request: pytest.FixtureRequest,
 ) -> AsyncGenerator[LOCAL_OSC_T, None]:
     request.applymarker(pytest.mark.local_obs)
-    local = Osc(
-        username=osc_test_user_name(),
-        password=os.getenv("OSC_PASSWORD", "nots3cr3t"),
-        api_url=(api_url := local_obs_apiurl()),
-    )
-    admin = Osc(username="Admin", password="opensuse", api_url=api_url)
-    yield (local, admin)
+    async with (
+        Osc(
+            username=osc_test_user_name(),
+            password=os.getenv("OSC_PASSWORD", "nots3cr3t"),
+            api_url=(api_url := local_obs_apiurl()),
+        ) as local,
+        Osc(username="Admin", password="opensuse", api_url=api_url) as admin,
+    ):
+        yield (local, admin)
 
 
 HOME_PROJ_T = tuple[Osc, Osc, project.Project, project.Package]
