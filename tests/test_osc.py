@@ -208,3 +208,21 @@ async def test_timeout_no_recovery(
 
     assert "Sending a GET request to /about timed out" in str(runtime_err_ctx.value)
     assert calls == 2
+
+
+@pytest.mark.asyncio
+async def test_raise_for_status_flag(local_osc: LOCAL_OSC_T) -> None:
+    osc, _ = local_osc
+
+    # With raise_for_status=True (default), should raise exception
+    with pytest.raises(aiohttp.ClientResponseError):
+        await osc.api_request("/nonexistent")
+
+    with pytest.raises(aiohttp.ClientResponseError):
+        await osc.api_request("/nonexistent", raise_for_status=True)
+
+    # With raise_for_status=False, should return response without raising
+    resp = await osc.api_request("/nonexistent", raise_for_status=False)
+    assert resp.status == 404
+    # consume the response to avoid warnings
+    await resp.read()
