@@ -17,6 +17,8 @@ pytest-asyncio = ">=0.21.1"
 ruff = ">=0.0.277"
 mypy = ">=1.4.1"
 pytest-recording = ">=0.13.1"
+pytest-cov = ">=4.0.0"
+coverage = {extras = ["toml"], version = ">=7.0.0"}
 
 [build-system]
 requires = ["poetry-core"]
@@ -26,3 +28,18 @@ build-backend = "poetry.core.masonry.api"
 markers = [
     "local_obs: marks tests requiring a local obs instance for testing",
 ]
+
+[tool.coverage.run]
+source = ["src/py_obs"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+]
+
+[tool.coverage.html]
+directory = "htmlcov"
