@@ -2,7 +2,6 @@ import asyncio
 import configparser
 import dataclasses
 import http.cookiejar
-from http.cookies import BaseCookie
 import os
 import os.path
 import re
@@ -10,9 +9,11 @@ import subprocess
 import time
 import typing
 import urllib.request
+from http.cookies import BaseCookie
 
 import aiohttp
-from aiohttp.abc import AbstractCookieJar, ClearCookiePredicate
+from aiohttp.abc import AbstractCookieJar
+from aiohttp.abc import ClearCookiePredicate
 from aiohttp.typedefs import LooseCookies
 from multidict import CIMultiDictProxy
 from yarl import URL
@@ -217,6 +218,7 @@ class Osc:
 
     _cookie_jar: CookieJar = None  # type: ignore[assignment]
     _auth: aiohttp.BasicAuth | SignatureAuth | None = None
+    _session: aiohttp.ClientSession | None = None
 
     _default_headers: dict[str, str] = dataclasses.field(
         default_factory=lambda: {
@@ -281,6 +283,16 @@ class Osc:
             api_url=os.getenv("OSC_APIURL", _DEFAULT_API_URL),
         )
 
+    async def _ensure_session(self) -> aiohttp.ClientSession:
+        """Create or return the persistent ClientSession"""
+        if self._session is None or self._session.closed:
+            self._session = aiohttp.ClientSession(
+                base_url=self.api_url,
+                headers=self._default_headers,
+                cookie_jar=self._cookie_jar,
+            )
+        return self._session
+
     async def api_request(
         self,
         route: str,
@@ -306,6 +318,10 @@ class Osc:
         - optionally prepend ``/public/`` to the route if the
           :py:attr:`~Osc.public` flag is set
 
+        Returns:
+            Raw aiohttp.ClientResponse object. The session lifecycle issue is
+            solved by using a persistent session that lives as long as the Osc
+            instance, so responses remain usable even after the request completes.
         """
         if self.public:
             route = f"/public{route}"
@@ -322,97 +338,109 @@ class Osc:
             "_cookie_jar must have been created in __post_init__"
         )
 
+        session = await self._ensure_session()
         backoff = backoff or BackOff()
+        headers = list(self._default_headers.items())
 
-        async with aiohttp.ClientSession(
-            raise_for_status=raise_for_status,
-            base_url=self.api_url,
-            headers=self._default_headers,
-            cookie_jar=typing.cast(AbstractCookieJar, self._cookie_jar),
-        ) as session:
-            headers = list(self._default_headers.items())
-            for cookie in session.cookie_jar.filter_cookies(URL(self.api_url)):
-                headers.append(cookie)  # type: ignore[arg-type]
+        try:
+            sleep_time = backoff.initial_sleep_time
+            resp: None | aiohttp.ClientResponse = None
 
-            try:
-                sleep_time = backoff.initial_sleep_time
-                resp: None | aiohttp.ClientResponse = None
-
-                for i in range(backoff.retries):
-                    try:
-                        resp = await session.request(
-                            method=method,
-                            params=params,
-                            url=route,
-                            data=payload,
-                            headers=headers,
-                            auth=self._auth,
-                        )
-                        if resp.status not in Osc._RETRY_STATUSES:
-                            return resp
-                    except asyncio.TimeoutError:
-                        pass
-
-                    # don't wait after the last try
-                    if i == backoff.retries - 1:
-                        break
-
-                    await asyncio.sleep(sleep_time)
-                    sleep_time *= backoff.increase_factor
-
-                if resp is None:
-                    raise RuntimeError(
-                        f"Sending a {method} request to {route} timed out"
+            for i in range(backoff.retries):
+                try:
+                    resp = await session.request(
+                        method=method,
+                        params=params,
+                        url=route,
+                        data=payload,
+                        headers=headers,
+                        auth=self._auth,
                     )
+                    if resp.status not in Osc._RETRY_STATUSES:
+                        if raise_for_status:
+                            resp.raise_for_status()
+                        return resp
+                except asyncio.TimeoutError:
+                    pass
 
+                # don't wait after the last try
+                if i == backoff.retries - 1:
+                    break
+
+                await asyncio.sleep(sleep_time)
+                sleep_time *= backoff.increase_factor
+
+            if resp is None:
+                raise RuntimeError(f"Sending a {method} request to {route} timed out")
+
+            if raise_for_status:
                 resp.raise_for_status()
-                assert False, "This code path must be unreachable"
+            return resp
 
-            except aiohttp.ClientResponseError as cre_exc:
-                if cre_exc.status != 401:
-                    raise ObsException(**cre_exc.__dict__) from cre_exc
+        except aiohttp.ClientResponseError as cre_exc:
+            if cre_exc.status != 401:
+                raise ObsException(**cre_exc.__dict__) from cre_exc
 
-                if cre_exc.status == 401 and self.public:
-                    raise ObsException(**cre_exc.__dict__) from cre_exc
+            if cre_exc.status == 401 and self.public:
+                raise ObsException(**cre_exc.__dict__) from cre_exc
 
-                # TODO: lock and run the following code only in 1 thread; other
-                # threads should use session cookies again
+            # TODO: lock and run the following code only in 1 thread; other
+            # threads should use session cookies again
 
-                # needed to make mypy happy, in theory cre_exc.headers can have a
-                # different type as well…
-                assert isinstance(cre_exc.headers, CIMultiDictProxy)
-                supported_auth_methods = [
-                    i.split(" ")[0].lower()
-                    for i in (cre_exc.headers).getall("WWW-Authenticate")
-                ]
-                LOGGER.debug(f"Supported auth methods: {supported_auth_methods}")
+            # needed to make mypy happy, in theory cre_exc.headers can have a
+            # different type as well…
+            assert isinstance(cre_exc.headers, CIMultiDictProxy)
+            supported_auth_methods = [
+                i.split(" ")[0].lower()
+                for i in (cre_exc.headers).getall("WWW-Authenticate")
+            ]
+            LOGGER.debug(f"Supported auth methods: {supported_auth_methods}")
 
-                for auth_method in supported_auth_methods:
-                    if auth_method == "signature" and self.ssh_key_path:
-                        self._auth = SignatureAuth(
-                            login=self.username,
-                            ssh_key_path=self.ssh_key_path,
-                            response_headers=cre_exc.headers,
-                        )
-                        break
-                    elif auth_method == "basic" and self.password:
-                        self._auth = aiohttp.BasicAuth(
-                            login=self.username, password=self.password
-                        )
-                        break
+            for auth_method in supported_auth_methods:
+                if auth_method == "signature" and self.ssh_key_path:
+                    self._auth = SignatureAuth(
+                        login=self.username,
+                        ssh_key_path=self.ssh_key_path,
+                        response_headers=cre_exc.headers,
+                    )
+                    break
+                elif auth_method == "basic" and self.password:
+                    self._auth = aiohttp.BasicAuth(
+                        login=self.username, password=self.password
+                    )
+                    break
 
-                if not self._auth:
-                    # we have no suitable auth handler, let's re-raise the original
-                    # exception
-                    raise ObsException(**cre_exc.__dict__) from cre_exc
+            if not self._auth:
+                # we have no suitable auth handler, let's re-raise the original
+                # exception
+                raise ObsException(**cre_exc.__dict__) from cre_exc
 
-                return await session.request(
-                    method=method,
-                    params=params,
-                    url=route,
-                    data=payload,
-                    auth=self._auth,
-                )
+            resp = await session.request(
+                method=method,
+                params=params,
+                url=route,
+                data=payload,
+                auth=self._auth,
+            )
+            if raise_for_status:
+                resp.raise_for_status()
+            return resp
+
+    async def close(self) -> None:
+        """Close the persistent ClientSession
+
+        This should be called when the `Osc` instance is no longer needed.
+
+        """
+        if self._session and not self._session.closed:
+            await self._session.close()
+            self._session = None
+
+    async def __aenter__(self) -> "Osc":
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
+        await self.close()
 
     @staticmethod
     async def _raise_for_status(resp: aiohttp.ClientResponse) -> None:
