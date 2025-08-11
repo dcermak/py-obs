@@ -45,9 +45,9 @@ jobs:
           pip install --upgrade poetry
           poetry install
 
-      - run: poetry run ruff check src
+      - run: make lint
 
-      - run: poetry run mypy src
+      - run: make typecheck
 
   ci:
     name: Run the integration tests
@@ -74,10 +74,12 @@ jobs:
           ./start-mini-obs.sh
           ./configure-mini-obs.sh
 
-      - name: Run the actual tests
-        run: poetry run pytest -vv
+      - name: Run the actual tests with coverage
+        run: make test-cov-xml
 
-      # - name: Upload coverage to Codecov
-      #   uses: codecov/codecov-action@v3
-      #   with:
-      #     fail_ci_if_error: true
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: coverage.xml
+          fail_ci_if_error: true
