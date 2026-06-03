@@ -184,6 +184,18 @@ class CookieJar(AbstractCookieJar):
     def quote_cookie(self) -> bool:
         return self._ensure_jar().quote_cookie
 
+    @property
+    def unsafe(self) -> bool:
+        return self._ensure_jar().unsafe
+
+    @property
+    def cookies(self) -> typing.Any:
+        return self._ensure_jar().cookies
+
+    @property
+    def host_only_cookies(self) -> typing.Any:
+        return self._ensure_jar().host_only_cookies
+
 
 _DEFAULT_API_URL = "https://api.opensuse.org/"
 
