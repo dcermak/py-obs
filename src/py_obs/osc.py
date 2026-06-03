@@ -10,6 +10,8 @@ import time
 import typing
 import urllib.request
 from http.cookies import BaseCookie
+from http.cookies import SimpleCookie
+from types import MappingProxyType
 
 import aiohttp
 from aiohttp.abc import AbstractCookieJar
@@ -189,11 +191,11 @@ class CookieJar(AbstractCookieJar):
         return self._ensure_jar().unsafe
 
     @property
-    def cookies(self) -> typing.Any:
+    def cookies(self) -> MappingProxyType[tuple[str, str], SimpleCookie]:
         return self._ensure_jar().cookies
 
     @property
-    def host_only_cookies(self) -> typing.Any:
+    def host_only_cookies(self) -> frozenset[tuple[str, str]]:
         return self._ensure_jar().host_only_cookies
 
 
