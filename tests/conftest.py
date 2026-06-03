@@ -1,9 +1,14 @@
 import os
+from inspect import Parameter
+from inspect import signature
+from types import SimpleNamespace
 from collections.abc import AsyncGenerator
 from dataclasses import dataclass
 from typing import Self
 from urllib.parse import urlparse
 
+import aiohttp
+import aiohttp.streams as aiohttp_streams
 import pytest
 import pytest_asyncio
 from vcr import VCR
@@ -17,6 +22,25 @@ from py_obs.xml_factory import StrElementField
 
 LOCAL_OSC_T = tuple[Osc, Osc]
 OSC_FROM_ENV_T = Osc
+
+
+if not hasattr(aiohttp_streams, "AsyncStreamReaderMixin"):
+    aiohttp_streams.AsyncStreamReaderMixin = object  # type: ignore[attr-defined]
+
+
+_client_response_init = aiohttp.ClientResponse.__init__
+_client_response_init_params = signature(_client_response_init).parameters
+if (
+    "stream_writer" in _client_response_init_params
+    and _client_response_init_params["stream_writer"].default is Parameter.empty
+):
+
+    def _compat_client_response_init(self, *args, **kwargs):
+        if "stream_writer" not in kwargs and "writer" in kwargs:
+            kwargs["stream_writer"] = kwargs["writer"] or SimpleNamespace(output_size=0)
+        return _client_response_init(self, *args, **kwargs)
+
+    aiohttp.ClientResponse.__init__ = _compat_client_response_init
 
 
 @pytest.fixture(scope="module")
