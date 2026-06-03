@@ -1,7 +1,6 @@
 import os
 from inspect import Parameter
 from inspect import signature
-from types import SimpleNamespace
 from collections.abc import AsyncGenerator
 from dataclasses import dataclass
 from typing import Self
@@ -25,11 +24,20 @@ OSC_FROM_ENV_T = Osc
 
 
 if not hasattr(aiohttp_streams, "AsyncStreamReaderMixin"):
+    # vcr still imports this removed aiohttp symbol when patching aiohttp clients.
     aiohttp_streams.AsyncStreamReaderMixin = object  # type: ignore[attr-defined]
 
 
 _client_response_init = aiohttp.ClientResponse.__init__
 _client_response_init_params = signature(_client_response_init).parameters
+
+
+class _CompatStreamWriter:
+    """Minimal stream-writer stub for aiohttp ClientResponse test shims."""
+
+    output_size = 0
+
+
 if (
     "stream_writer" in _client_response_init_params
     and _client_response_init_params["stream_writer"].default is Parameter.empty
@@ -37,7 +45,7 @@ if (
 
     def _compat_client_response_init(self, *args, **kwargs):
         if "stream_writer" not in kwargs and "writer" in kwargs:
-            kwargs["stream_writer"] = kwargs["writer"] or SimpleNamespace(output_size=0)
+            kwargs["stream_writer"] = kwargs["writer"] or _CompatStreamWriter()
         return _client_response_init(self, *args, **kwargs)
 
     aiohttp.ClientResponse.__init__ = _compat_client_response_init
